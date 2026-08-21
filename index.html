@@ -220,12 +220,25 @@
 
 let audioContext = null;
 
+let currentSong = [];
+let currentIndex = 0;
+let playing = false;
+let paused = false;
+let timer = null;
+
+
+/* ==============================
+   AUDIO
+============================== */
+
 function getAudioContext() {
 
     if (!audioContext) {
+
         audioContext =
             new (window.AudioContext ||
             window.webkitAudioContext)();
+
     }
 
     if (audioContext.state === "suspended") {
@@ -237,7 +250,7 @@ function getAudioContext() {
 
 
 /* ==============================
-   TẦN SỐ CÁC NỐT
+   TẦN SỐ
 ============================== */
 
 const frequencies = {
@@ -258,10 +271,10 @@ const frequencies = {
 
 
 /* ==============================
-   PHÁT ÂM THANH
+   PHÁT NỐT
 ============================== */
 
-function playNote(note) {
+function playNote(note, duration = 0.5) {
 
     const frequency =
         frequencies[note];
@@ -296,21 +309,19 @@ function playNote(note) {
 
     gain.gain.exponentialRampToValueAtTime(
         0.0001,
-        ctx.currentTime + 0.7
+        ctx.currentTime + duration
     );
 
 
     oscillator.connect(gain);
-
-    gain.connect(
-        ctx.destination
-    );
-
+    gain.connect(ctx.destination);
 
     oscillator.start();
 
     oscillator.stop(
-        ctx.currentTime + 0.75
+        ctx.currentTime +
+        duration +
+        0.05
     );
 
 
@@ -319,7 +330,7 @@ function playNote(note) {
 
 
 /* ==============================
-   LÀM SÁNG PHÍM
+   SÁNG PHÍM
 ============================== */
 
 function highlightKey(note) {
@@ -337,13 +348,13 @@ function highlightKey(note) {
 
         key.classList.remove("active");
 
-    }, 150);
+    }, 180);
 
 }
 
 
 /* ==============================
-   CLICK VÀO PHÍM PIANO
+   CLICK PIANO
 ============================== */
 
 document.querySelectorAll(".key")
@@ -353,10 +364,9 @@ document.querySelectorAll(".key")
         "click",
         () => {
 
-            const note =
-                key.dataset.note;
-
-            playNote(note);
+            playNote(
+                key.dataset.note
+            );
 
         }
     );
@@ -377,7 +387,6 @@ const keyboard = {
     g: "G4",
     h: "A4",
     j: "B4",
-
     k: "C5",
     l: "D5",
     ";": "E5"
@@ -401,6 +410,260 @@ document.addEventListener(
             playNote(note);
 
         }
+
+    }
+);
+
+
+/* ==============================
+   DỮ LIỆU BÀI HÁT
+============================== */
+
+const songs = {
+
+    twinkle: [
+        ["C4", 0.5],
+        ["C4", 0.5],
+        ["G4", 0.5],
+        ["G4", 0.5],
+        ["A4", 0.5],
+        ["A4", 0.5],
+        ["G4", 1],
+
+        ["F4", 0.5],
+        ["F4", 0.5],
+        ["E4", 0.5],
+        ["E4", 0.5],
+        ["D4", 0.5],
+        ["D4", 0.5],
+        ["C4", 1]
+    ],
+
+    ode: [
+        ["E4", 0.5],
+        ["E4", 0.5],
+        ["F4", 0.5],
+        ["G4", 0.5],
+
+        ["G4", 0.5],
+        ["F4", 0.5],
+        ["E4", 0.5],
+        ["D4", 0.5],
+
+        ["C4", 0.5],
+        ["C4", 0.5],
+        ["D4", 0.5],
+        ["E4", 0.5],
+
+        ["E4", 0.75],
+        ["D4", 0.25],
+        ["D4", 1]
+    ],
+
+    happy: [
+        ["C4", 0.4],
+        ["C4", 0.4],
+        ["D4", 0.8],
+        ["C4", 0.8],
+        ["F4", 0.8],
+        ["E4", 1],
+
+        ["C4", 0.4],
+        ["C4", 0.4],
+        ["D4", 0.8],
+        ["C4", 0.8],
+        ["G4", 0.8],
+        ["F4", 1]
+    ]
+
+};
+
+
+/* ==============================
+   TẢI BÀI
+============================== */
+
+document.getElementById("loadBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        const selected =
+            document.getElementById(
+                "songSelect"
+            ).value;
+
+        currentSong =
+            songs[selected];
+
+        currentIndex = 0;
+        playing = false;
+        paused = false;
+
+        clearTimeout(timer);
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "Đã tải bài 🎵";
+
+        document.getElementById(
+            "currentNote"
+        ).textContent =
+            "Sẵn sàng";
+
+    }
+);
+
+
+/* ==============================
+   PLAY
+============================== */
+
+document.getElementById("playBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        if (!currentSong.length) {
+
+            const selected =
+                document.getElementById(
+                    "songSelect"
+                ).value;
+
+            currentSong =
+                songs[selected];
+
+        }
+
+        clearTimeout(timer);
+
+        currentIndex = 0;
+
+        playing = true;
+        paused = false;
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "🎹 Đang tự động đánh...";
+
+        playNext();
+
+    }
+);
+
+
+/* ==============================
+   ĐÁNH NỐT TIẾP THEO
+============================== */
+
+function playNext() {
+
+    if (!playing || paused) {
+        return;
+    }
+
+
+    if (
+        currentIndex >=
+        currentSong.length
+    ) {
+
+        playing = false;
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "✅ Đã đánh xong bài!";
+
+        document.getElementById(
+            "currentNote"
+        ).textContent =
+            "🎵";
+
+        return;
+
+    }
+
+
+    const [note, duration] =
+        currentSong[currentIndex];
+
+
+    document.getElementById(
+        "currentNote"
+    ).textContent =
+        note;
+
+
+    playNote(
+        note,
+        duration
+    );
+
+
+    currentIndex++;
+
+
+    timer = setTimeout(
+        playNext,
+        duration * 1000
+    );
+
+}
+
+
+/* ==============================
+   PAUSE
+============================== */
+
+document.getElementById("pauseBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        if (!playing) return;
+
+        paused = true;
+
+        clearTimeout(timer);
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "⏸️ Đã tạm dừng";
+
+    }
+);
+
+
+/* ==============================
+   STOP
+============================== */
+
+document.getElementById("stopBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        playing = false;
+        paused = false;
+
+        clearTimeout(timer);
+
+        currentIndex = 0;
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "⏹️ Đã dừng";
+
+        document.getElementById(
+            "currentNote"
+        ).textContent =
+            "—";
 
     }
 );
