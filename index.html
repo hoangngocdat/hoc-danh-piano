@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -49,7 +50,8 @@
             margin-top: 0;
         }
 
-        select {
+        select,
+        input {
             width: 100%;
             padding: 13px;
             border-radius: 10px;
@@ -86,7 +88,11 @@
             margin-top: 10px;
         }
 
-        /* PIANO */
+        #youtubeResult {
+            margin-top: 15px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
 
         #piano {
             display: flex;
@@ -139,40 +145,37 @@
     <p class="subtitle">
         Piano tự động đánh bài
     </p>
-<div class="box">
 
-    <h2>🔗 Chọn bài từ YouTube</h2>
 
-    <input
-        id="youtubeUrl"
-        type="text"
-        placeholder="Dán link YouTube vào đây..."
-        style="
-            width:100%;
-            padding:13px;
-            border-radius:10px;
-            border:none;
-            background:#111827;
-            color:white;
-            font-size:16px;
-        "
-    >
+    <!-- ==============================
+         YOUTUBE
+    =============================== -->
 
-    <button id="youtubeBtn">
-        🔎 Nhận bài
-    </button>
+    <div class="box">
 
-    <div
-        id="youtubeResult"
-        style="
-            margin-top:15px;
-            color:#cbd5e1;
-        "
-    >
-        Chưa chọn bài YouTube.
+        <h2>🔗 Chọn bài từ YouTube</h2>
+
+        <input
+            id="youtubeUrl"
+            type="text"
+            placeholder="Dán link YouTube vào đây..."
+        >
+
+        <button id="youtubeBtn">
+            🔎 Nhận bài
+        </button>
+
+        <div id="youtubeResult">
+            Chưa chọn bài YouTube.
+        </div>
+
     </div>
 
-</div>
+
+    <!-- ==============================
+         CHỌN BÀI
+    =============================== -->
+
     <div class="box">
 
         <h2>🎵 Chọn bài</h2>
@@ -199,6 +202,10 @@
             📥 Tải bài
         </button>
 
+        <button id="receiveBtn">
+            🎵 Nhận bài từ API
+        </button>
+
         <button id="playBtn">
             ▶️ Play
         </button>
@@ -213,6 +220,11 @@
 
     </div>
 
+
+    <!-- ==============================
+         TRẠNG THÁI
+    =============================== -->
+
     <div class="box">
 
         <div id="status">
@@ -224,6 +236,11 @@
         </div>
 
     </div>
+
+
+    <!-- ==============================
+         PIANO
+    =============================== -->
 
     <div class="box">
 
@@ -249,15 +266,24 @@
 
 </div>
 
+
 <script>
+
+/* ==============================
+   BIẾN
+============================== */
 
 let audioContext = null;
 
 let currentSong = [];
 let currentIndex = 0;
+
 let playing = false;
 let paused = false;
+
 let timer = null;
+
+window.songNotes = null;
 
 
 /* ==============================
@@ -269,13 +295,17 @@ function getAudioContext() {
     if (!audioContext) {
 
         audioContext =
-            new (window.AudioContext ||
-            window.webkitAudioContext)();
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
 
     }
 
     if (audioContext.state === "suspended") {
+
         audioContext.resume();
+
     }
 
     return audioContext;
@@ -312,10 +342,20 @@ function playNote(note, duration = 0.5) {
     const frequency =
         frequencies[note];
 
-    if (!frequency) return;
+    if (!frequency) {
+
+        console.warn(
+            "Không có tần số cho:",
+            note
+        );
+
+        return;
+
+    }
 
     const ctx =
         getAudioContext();
+
 
     const oscillator =
         ctx.createOscillator();
@@ -324,7 +364,8 @@ function playNote(note, duration = 0.5) {
         ctx.createGain();
 
 
-    oscillator.type = "triangle";
+    oscillator.type =
+        "triangle";
 
     oscillator.frequency.value =
         frequency;
@@ -335,10 +376,12 @@ function playNote(note, duration = 0.5) {
         ctx.currentTime
     );
 
+
     gain.gain.exponentialRampToValueAtTime(
         0.35,
         ctx.currentTime + 0.02
     );
+
 
     gain.gain.exponentialRampToValueAtTime(
         0.0001,
@@ -347,9 +390,14 @@ function playNote(note, duration = 0.5) {
 
 
     oscillator.connect(gain);
-    gain.connect(ctx.destination);
+
+    gain.connect(
+        ctx.destination
+    );
+
 
     oscillator.start();
+
 
     oscillator.stop(
         ctx.currentTime +
@@ -359,6 +407,7 @@ function playNote(note, duration = 0.5) {
 
 
     highlightKey(note);
+
 }
 
 
@@ -375,13 +424,22 @@ function highlightKey(note) {
 
     if (!key) return;
 
-    key.classList.add("active");
 
-    setTimeout(() => {
+    key.classList.add(
+        "active"
+    );
 
-        key.classList.remove("active");
 
-    }, 180);
+    setTimeout(
+        () => {
+
+            key.classList.remove(
+                "active"
+            );
+
+        },
+        180
+    );
 
 }
 
@@ -390,25 +448,28 @@ function highlightKey(note) {
    CLICK PIANO
 ============================== */
 
-document.querySelectorAll(".key")
-.forEach(key => {
+document
+    .querySelectorAll(".key")
+    .forEach(
+        key => {
 
-    key.addEventListener(
-        "click",
-        () => {
+            key.addEventListener(
+                "click",
+                () => {
 
-            playNote(
-                key.dataset.note
+                    playNote(
+                        key.dataset.note
+                    );
+
+                }
             );
 
         }
     );
 
-});
-
 
 /* ==============================
-   BÀN PHÍM MÁY TÍNH
+   BÀN PHÍM
 ============================== */
 
 const keyboard = {
@@ -431,12 +492,15 @@ document.addEventListener(
     "keydown",
     event => {
 
-        if (event.repeat) return;
+        if (event.repeat)
+            return;
+
 
         const note =
             keyboard[
                 event.key.toLowerCase()
             ];
+
 
         if (note) {
 
@@ -449,12 +513,13 @@ document.addEventListener(
 
 
 /* ==============================
-   DỮ LIỆU BÀI HÁT
+   BÀI MẪU
 ============================== */
 
 const songs = {
 
     twinkle: [
+
         ["C4", 0.5],
         ["C4", 0.5],
         ["G4", 0.5],
@@ -470,9 +535,12 @@ const songs = {
         ["D4", 0.5],
         ["D4", 0.5],
         ["C4", 1]
+
     ],
 
+
     ode: [
+
         ["E4", 0.5],
         ["E4", 0.5],
         ["F4", 0.5],
@@ -491,9 +559,12 @@ const songs = {
         ["E4", 0.75],
         ["D4", 0.25],
         ["D4", 1]
+
     ],
 
+
     happy: [
+
         ["C4", 0.4],
         ["C4", 0.4],
         ["D4", 0.8],
@@ -507,95 +578,193 @@ const songs = {
         ["C4", 0.8],
         ["G4", 0.8],
         ["F4", 1]
+
     ]
 
 };
 
 
 /* ==============================
-   TẢI BÀI
+   TẢI BÀI MẪU
 ============================== */
 
-document.getElementById("loadBtn")
-.addEventListener(
-    "click",
-    () => {
-
-        const selected =
-            document.getElementById(
-                "songSelect"
-            ).value;
-
-        currentSong =
-            songs[selected];
-
-        currentIndex = 0;
-        playing = false;
-        paused = false;
-
-        clearTimeout(timer);
-
-        document.getElementById(
-            "status"
-        ).textContent =
-            "Đã tải bài 🎵";
-
-        document.getElementById(
-            "currentNote"
-        ).textContent =
-            "Sẵn sàng";
-
-    }
-);
-
-
-/* ==============================
-   PLAY
-============================== */
-
-document.getElementById("playBtn")
-.addEventListener(
-    "click",
-    () => {
-
-        if (!currentSong.length) {
+document
+    .getElementById("loadBtn")
+    .addEventListener(
+        "click",
+        () => {
 
             const selected =
                 document.getElementById(
                     "songSelect"
                 ).value;
 
+
             currentSong =
-                songs[selected];
+                songs[selected] || [];
+
+
+            currentIndex = 0;
+
+            playing = false;
+
+            paused = false;
+
+            clearTimeout(timer);
+
+
+            document.getElementById(
+                "status"
+            ).textContent =
+                "Đã tải bài 🎵";
+
+
+            document.getElementById(
+                "currentNote"
+            ).textContent =
+                "Sẵn sàng";
 
         }
-
-        clearTimeout(timer);
-
-        currentIndex = 0;
-
-        playing = true;
-        paused = false;
-
-        document.getElementById(
-            "status"
-        ).textContent =
-            "🎹 Đang tự động đánh...";
-
-        playNext();
-
-    }
-);
+    );
 
 
 /* ==============================
-   ĐÁNH NỐT TIẾP THEO
+   PLAY
+============================== */
+
+document
+    .getElementById("playBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            playSong();
+
+        }
+    );
+
+
+/* ==============================
+   PLAY SONG
+============================== */
+
+function playSong() {
+
+    if (
+        !window.songNotes ||
+        !Array.isArray(
+            window.songNotes
+        ) ||
+        window.songNotes.length === 0
+    ) {
+
+        /* Nếu chưa có bài API,
+           dùng bài đang chọn */
+
+        const selected =
+            document.getElementById(
+                "songSelect"
+            ).value;
+
+
+        currentSong =
+            songs[selected] || [];
+
+    }
+
+    else {
+
+        currentSong =
+            window.songNotes.map(
+                item => {
+
+                    if (
+                        Array.isArray(item)
+                    ) {
+
+                        return [
+                            item[0],
+                            Number(
+                                item[1]
+                            ) || 0.5
+                        ];
+
+                    }
+
+
+                    return [
+                        item.note,
+                        Number(
+                            item.duration
+                        ) || 0.5
+                    ];
+
+                }
+            );
+
+    }
+
+
+    if (
+        !currentSong.length
+    ) {
+
+        alert(
+            "Không có dữ liệu bài hát!"
+        );
+
+        return;
+
+    }
+
+
+    const ctx =
+        getAudioContext();
+
+
+    if (
+        ctx.state === "suspended"
+    ) {
+
+        ctx.resume();
+
+    }
+
+
+    clearTimeout(timer);
+
+
+    currentIndex = 0;
+
+    playing = true;
+
+    paused = false;
+
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "🎹 Đang tự động đánh...";
+
+
+    playNext();
+
+}
+
+
+/* ==============================
+   ĐÁNH NỐT
 ============================== */
 
 function playNext() {
 
-    if (!playing || paused) {
+    if (
+        !playing ||
+        paused
+    ) {
+
         return;
+
     }
 
 
@@ -606,23 +775,35 @@ function playNext() {
 
         playing = false;
 
+
         document.getElementById(
             "status"
         ).textContent =
             "✅ Đã đánh xong bài!";
+
 
         document.getElementById(
             "currentNote"
         ).textContent =
             "🎵";
 
+
         return;
 
     }
 
 
-    const [note, duration] =
-        currentSong[currentIndex];
+    const item =
+        currentSong[
+            currentIndex
+        ];
+
+
+    const note =
+        item[0];
+
+    const duration =
+        Number(item[1]) || 0.5;
 
 
     document.getElementById(
@@ -640,10 +821,109 @@ function playNext() {
     currentIndex++;
 
 
-    timer = setTimeout(
-        playNext,
-        duration * 1000
+    timer =
+        setTimeout(
+            playNext,
+            duration * 1000
+        );
+
+}
+
+
+/* ==============================
+   NHẬN BÀI TỪ API
+============================== */
+
+document
+    .getElementById("receiveBtn")
+    .addEventListener(
+        "click",
+        receiveSong
     );
+
+
+async function receiveSong() {
+
+    try {
+
+        const selected =
+            document.getElementById(
+                "songSelect"
+            ).value;
+
+
+        const response =
+            await fetch(
+                "/api/piano",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        title: selected
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "API:",
+            data
+        );
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                "❌ API lỗi: " +
+                (
+                    data.error ||
+                    "Không lấy được bài"
+                )
+            );
+
+            return;
+
+        }
+
+
+        window.songNotes =
+            data.notes;
+
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            `Đã nhận ${data.notes.length} nốt 🎹`;
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "❌ Không kết nối được Piano API!"
+        );
+
+    }
 
 }
 
@@ -652,92 +932,91 @@ function playNext() {
    PAUSE
 ============================== */
 
-document.getElementById("pauseBtn")
-.addEventListener(
-    "click",
-    () => {
+document
+    .getElementById("pauseBtn")
+    .addEventListener(
+        "click",
+        () => {
 
-        if (!playing) return;
+            if (!playing)
+                return;
 
-        paused = true;
 
-        clearTimeout(timer);
+            paused = true;
 
-        document.getElementById(
-            "status"
-        ).textContent =
-            "⏸️ Đã tạm dừng";
 
-    }
-);
+            clearTimeout(
+                timer
+            );
+
+
+            document.getElementById(
+                "status"
+            ).textContent =
+                "⏸️ Đã tạm dừng";
+
+        }
+    );
 
 
 /* ==============================
    STOP
 ============================== */
 
-document.getElementById("stopBtn")
-.addEventListener(
-    "click",
-    () => {
+document
+    .getElementById("stopBtn")
+    .addEventListener(
+        "click",
+        () => {
 
-        playing = false;
-        paused = false;
+            playing = false;
 
-        clearTimeout(timer);
+            paused = false;
 
-        currentIndex = 0;
 
-        document.getElementById(
-            "status"
-        ).textContent =
-            "⏹️ Đã dừng";
+            clearTimeout(
+                timer
+            );
 
-        document.getElementById(
-            "currentNote"
-        ).textContent =
-            "—";
 
-    }
-);
+            currentIndex = 0;
+
+
+            document.getElementById(
+                "status"
+            ).textContent =
+                "⏹️ Đã dừng";
+
+
+            document.getElementById(
+                "currentNote"
+            ).textContent =
+                "—";
+
+        }
+    );
+
+
 /* ==============================
    YOUTUBE
 ============================== */
 
 const youtubeBtn =
-    document.getElementById("youtubeBtn");
+    document.getElementById(
+        "youtubeBtn"
+    );
 
 const youtubeUrl =
-    document.getElementById("youtubeUrl");
+    document.getElementById(
+        "youtubeUrl"
+    );
 
 const youtubeResult =
-    document.getElementById("youtubeResult");
+    document.getElementById(
+        "youtubeResult"
+    );
 
-async function testPianoAPI() {
 
-    try {
-
-        const response =
-            await fetch("/api/piano");
-
-        const data =
-            await response.json();
-
-        console.log(
-            "Piano API:",
-            data
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Không kết nối được API:",
-            error
-        );
-
-    }
-
-}
 youtubeBtn.addEventListener(
     "click",
     async () => {
@@ -745,177 +1024,189 @@ youtubeBtn.addEventListener(
         const url =
             youtubeUrl.value.trim();
 
+
         if (!url) {
 
             youtubeResult.textContent =
                 "❌ Hãy dán link YouTube.";
 
             return;
+
         }
 
+
         try {
+
+            /* Lấy thông tin video */
 
             const api =
                 "https://www.youtube.com/oembed" +
                 "?url=" +
-                encodeURIComponent(url) +
+                encodeURIComponent(
+                    url
+                ) +
                 "&format=json";
+
 
             const response =
                 await fetch(api);
 
+
             if (!response.ok) {
-                throw new Error();
+
+                throw new Error(
+                    "Link YouTube không hợp lệ"
+                );
+
             }
+
 
             const data =
                 await response.json();
 
-            youtubeResult.innerHTML = `
+
+            youtubeResult.innerHTML =
+                `
                 ✅ Đã nhận bài!<br><br>
 
-                🎵 <b>${escapeHTML(data.title)}</b><br>
+                🎵 <b>
+                ${escapeHTML(
+                    data.title
+                )}
+                </b><br>
 
                 👤 Kênh:
-                ${escapeHTML(data.author_name)}
-            `;
-const apiResponse = await fetch("/api/piano", {
-    method: "POST",
+                ${escapeHTML(
+                    data.author_name
+                )}
 
-    headers: {
-        "Content-Type": "application/json"
-    },
+                <br><br>
+                ⏳ Đang lấy nốt...
+                `;
 
-  body: JSON.stringify({
-    title: document.getElementById("songSelect")?.value || "Twinkle Twinkle Little Star"
-})
-});
 
-const apiResponse = await fetch("/api/piano", {
-    method: "POST",
+            /*
+             * Gửi tên video lên API.
+             *
+             * API hiện tại của bạn chỉ có
+             * dữ liệu nốt mẫu.
+             */
 
-    headers: {
-        "Content-Type": "application/json"
-    },
+            const apiResponse =
+                await fetch(
+                    "/api/piano",
+                    {
 
-    body: JSON.stringify({
-        title: data.title
-    })
-});
+                        method: "POST",
 
-const apiData = await apiResponse.json();
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
 
-if (!apiResponse.ok || !apiData.success) {
-    throw new Error(
-        apiData.error || "API không tìm thấy bài này"
-    );
-}
+                        body:
+                            JSON.stringify({
+                                title:
+                                    data.title
+                            })
 
-window.songNotes = apiData.notes;
-console.log("🎹 NOTES TỪ YOUTUBE/API:", apiData.notes);
-youtubeResult.innerHTML += `
-    <br><br>
-    🎹 Đã lấy ${apiData.notes.length} nốt!
-    <br>
-    ✅ Bây giờ có thể bấm Play.
-`;
+                    }
+                );
+
+
+            const apiData =
+                await apiResponse.json();
+
+
+            if (
+                !apiResponse.ok ||
+                !apiData.success
+            ) {
+
+                throw new Error(
+                    apiData.error ||
+                    "API chưa có nốt cho bài này"
+                );
+
+            }
+
+
+            window.songNotes =
+                apiData.notes;
+
+
+            console.log(
+                "🎹 NOTES:",
+                apiData.notes
+            );
+
+
+            youtubeResult.innerHTML =
+                `
+                ${youtubeResult.innerHTML}
+
+                <br>
+
+                🎹 Đã nhận
+                <b>
+                ${apiData.notes.length}
+                </b>
+                nốt!
+
+                <br>
+
+                ✅ Bấm Play để đánh.
+                `;
+
+
+            document.getElementById(
+                "status"
+            ).textContent =
+                `Đã nhận ${apiData.notes.length} nốt từ API 🎹`;
+
+        }
+
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            youtubeResult.innerHTML =
+                `
+                ❌ ${escapeHTML(
+                    error.message
+                )}
+                `;
+
+        }
+
+    }
+);
 
 
 /* ==============================
-   CHỐNG HTML LẠ
+   ESCAPE HTML
 ============================== */
 
 function escapeHTML(text) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
-    div.textContent = text;
+
+    div.textContent =
+        text;
+
 
     return div.innerHTML;
 
 }
-function playSong() {
 
-    if (!window.songNotes || !Array.isArray(window.songNotes)) {
-        alert("Hãy bấm 🎵 Nhận bài trước!");
-        return;
-    }
-
-    const ctx = getAudioContext();
-
-    if (ctx.state === "suspended") {
-        ctx.resume();
-    }
-
-    currentSong = window.songNotes.map(item => {
-        return [
-            item.note,
-            Number(item.duration) || 0.5
-        ];
-    });
-
-    console.log("🎹 Bài chuẩn bị đánh:", currentSong);
-
-    currentIndex = 0;
-    playing = true;
-    paused = false;
-
-    document.getElementById("status").textContent =
-        "🎹 Đang tự động đánh bài từ API...";
-
-    playNext();
-}
-   async function receiveSong() {
-
-    try {
-
-        const response = await fetch("/api/piano", {
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-    title: document.getElementById("songSelect")?.value || "twinkle"
-})
-        });
-
-        const data = await response.json();
-
-        console.log("API trả về:", data);
-
-        if (!response.ok || !data.success) {
-            alert("❌ API lỗi: " + (data.error || "Không lấy được bài"));
-            return;
-        }
-
-        const notes = data.notes;
-
-        if (!Array.isArray(notes) || notes.length === 0) {
-            alert("❌ API không có notes!");
-            return;
-        }
-
-        window.songNotes = notes;
-
-        alert(`✅ Đã nhận ${notes.length} nốt 🎹`);
-
-        document.getElementById("status").textContent =
-            `Đã nhận bài: ${data.title} 🎵`;
-
-    } catch (error) {
-
-        console.error("Lỗi:", error);
-
-        alert("❌ Không kết nối được Piano API!");
-
-    }
-}
 </script>
-<button onclick="receiveSong()">🎵 Nhận bài</button>
-<button onclick="playSong()">▶️ Play</button>
-</body>
+
 </body>
 </html>
