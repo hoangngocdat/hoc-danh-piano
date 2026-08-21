@@ -218,13 +218,193 @@
 
 <script>
 
-    /*
-       Tạm thời chưa có JavaScript.
-       Bước tiếp theo sẽ thêm âm thanh
-       và chức năng tự động đánh.
-    */
+let audioContext = null;
+
+function getAudioContext() {
+
+    if (!audioContext) {
+        audioContext =
+            new (window.AudioContext ||
+            window.webkitAudioContext)();
+    }
+
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    return audioContext;
+}
+
+
+/* ==============================
+   TẦN SỐ CÁC NỐT
+============================== */
+
+const frequencies = {
+
+    C4: 261.63,
+    D4: 293.66,
+    E4: 329.63,
+    F4: 349.23,
+    G4: 392.00,
+    A4: 440.00,
+    B4: 493.88,
+
+    C5: 523.25,
+    D5: 587.33,
+    E5: 659.25
+
+};
+
+
+/* ==============================
+   PHÁT ÂM THANH
+============================== */
+
+function playNote(note) {
+
+    const frequency =
+        frequencies[note];
+
+    if (!frequency) return;
+
+    const ctx =
+        getAudioContext();
+
+    const oscillator =
+        ctx.createOscillator();
+
+    const gain =
+        ctx.createGain();
+
+
+    oscillator.type = "triangle";
+
+    oscillator.frequency.value =
+        frequency;
+
+
+    gain.gain.setValueAtTime(
+        0.0001,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.35,
+        ctx.currentTime + 0.02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        ctx.currentTime + 0.7
+    );
+
+
+    oscillator.connect(gain);
+
+    gain.connect(
+        ctx.destination
+    );
+
+
+    oscillator.start();
+
+    oscillator.stop(
+        ctx.currentTime + 0.75
+    );
+
+
+    highlightKey(note);
+}
+
+
+/* ==============================
+   LÀM SÁNG PHÍM
+============================== */
+
+function highlightKey(note) {
+
+    const key =
+        document.querySelector(
+            `.key[data-note="${note}"]`
+        );
+
+    if (!key) return;
+
+    key.classList.add("active");
+
+    setTimeout(() => {
+
+        key.classList.remove("active");
+
+    }, 150);
+
+}
+
+
+/* ==============================
+   CLICK VÀO PHÍM PIANO
+============================== */
+
+document.querySelectorAll(".key")
+.forEach(key => {
+
+    key.addEventListener(
+        "click",
+        () => {
+
+            const note =
+                key.dataset.note;
+
+            playNote(note);
+
+        }
+    );
+
+});
+
+
+/* ==============================
+   BÀN PHÍM MÁY TÍNH
+============================== */
+
+const keyboard = {
+
+    a: "C4",
+    s: "D4",
+    d: "E4",
+    f: "F4",
+    g: "G4",
+    h: "A4",
+    j: "B4",
+
+    k: "C5",
+    l: "D5",
+    ";": "E5"
+
+};
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.repeat) return;
+
+        const note =
+            keyboard[
+                event.key.toLowerCase()
+            ];
+
+        if (note) {
+
+            playNote(note);
+
+        }
+
+    }
+);
 
 </script>
-
 </body>
 </html>
