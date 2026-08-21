@@ -779,7 +779,30 @@ youtubeBtn.addEventListener(
                 👤 Kênh:
                 ${escapeHTML(data.author_name)}
             `;
+const apiResponse = await fetch("/api/piano", {
+    method: "POST",
 
+    headers: {
+        "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+        title: data.title
+    })
+});
+
+const apiData = await apiResponse.json();
+
+if (!apiResponse.ok || !apiData.success) {
+    throw new Error(
+        apiData.error || "API lỗi"
+    );
+}
+
+youtubeResult.innerHTML += `
+    <br>
+    ✅ API đã nhận bài thành công!
+`;
         } catch (error) {
 
             youtubeResult.textContent =
