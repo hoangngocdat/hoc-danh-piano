@@ -14,14 +14,14 @@
 body{
     margin:0;
     min-height:100vh;
+    font-family:Arial,sans-serif;
     background:linear-gradient(135deg,#0f172a,#312e81);
     color:white;
-    font-family:Arial,sans-serif;
     padding:20px;
 }
 
 .app{
-    max-width:1200px;
+    max-width:1100px;
     margin:auto;
 }
 
@@ -47,7 +47,7 @@ h1{
 
 select{
     width:100%;
-    padding:13px;
+    padding:14px;
     border:0;
     border-radius:10px;
     background:#111827;
@@ -70,23 +70,36 @@ button:hover{
     transform:translateY(-2px);
 }
 
-.info{
+#nextNote{
+    text-align:center;
+    font-size:55px;
+    font-weight:bold;
+    margin:5px;
+}
+
+#message{
+    text-align:center;
+    min-height:30px;
+    font-size:18px;
+}
+
+.stats{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:12px;
-    margin-top:15px;
+    margin-top:20px;
 }
 
-.info-card{
+.stat{
     background:rgba(0,0,0,.2);
     border-radius:12px;
     padding:15px;
     text-align:center;
 }
 
-.big{
-    font-size:32px;
-    font-weight:bold;
+.stat strong{
+    display:block;
+    font-size:30px;
     margin-top:5px;
 }
 
@@ -95,43 +108,49 @@ button:hover{
     color:#dbeafe;
 }
 
-#nextNote{
-    text-align:center;
-    font-size:55px;
+.steps{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:12px;
+}
+
+.step{
+    background:#1e293b;
+    padding:8px 12px;
+    border-radius:8px;
+}
+
+.step.current{
+    background:#22c55e;
+    color:#052e16;
     font-weight:bold;
-    margin:10px;
 }
 
-#message{
-    text-align:center;
-    min-height:28px;
-    font-size:18px;
-}
-
-.piano-wrap{
-    overflow-x:auto;
-    padding:20px 0;
+.step.done{
+    opacity:.4;
 }
 
 .piano{
     display:flex;
-    min-width:1000px;
     justify-content:center;
+    gap:4px;
+    overflow-x:auto;
+    padding:20px 5px;
 }
 
 .key{
-    position:relative;
-    flex:1;
-    min-width:45px;
-    height:230px;
-    background:#fff;
+    min-width:90px;
+    height:250px;
+    background:white;
     color:#111;
-    border:1px solid #555;
-    border-radius:0 0 8px 8px;
+    border:2px solid #475569;
+    border-radius:0 0 12px 12px;
     display:flex;
-    align-items:flex-end;
-    justify-content:center;
-    padding-bottom:15px;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    padding-bottom:18px;
     cursor:pointer;
     user-select:none;
     transition:.08s;
@@ -143,65 +162,38 @@ button:hover{
 
 .key.active{
     background:#818cf8;
-    transform:translateY(5px);
+    transform:translateY(6px);
 }
 
 .key.target{
-    box-shadow:inset 0 -12px 0 #22c55e;
-}
-
-.key.black{
-    background:#111;
-    color:white;
-    height:145px;
-    min-width:34px;
-    margin:0 -17px;
-    z-index:5;
-    border-radius:0 0 6px 6px;
-}
-
-.key.black.active{
-    background:#6366f1;
-}
-
-.key span{
-    pointer-events:none;
+    box-shadow:inset 0 -18px 0 #22c55e;
 }
 
 .key .note{
-    font-size:13px;
-}
-
-.key .computer{
-    font-size:15px;
-    margin-top:5px;
-}
-
-.steps{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
-    margin-top:12px;
-}
-
-.step{
-    padding:8px 11px;
-    border-radius:8px;
-    background:#1e293b;
-}
-
-.step.current{
-    background:#22c55e;
-    color:#052e16;
+    font-size:20px;
     font-weight:bold;
 }
 
-.step.done{
-    opacity:.5;
+.key .computer{
+    margin-top:8px;
+    font-size:25px;
+    font-weight:bold;
+}
+
+.keyboard-info{
+    text-align:center;
+    font-size:18px;
+    color:#cbd5e1;
 }
 
 @media(max-width:700px){
-    .info{
+
+    .key{
+        min-width:65px;
+        height:200px;
+    }
+
+    .stats{
         grid-template-columns:repeat(2,1fr);
     }
 
@@ -227,20 +219,28 @@ Tự học piano bằng bàn phím máy tính
 
 <div class="box">
 
-<h2>📚 Chọn bài luyện tập</h2>
+<h2>📚 Chọn bài</h2>
 
 <select id="songSelect"></select>
 
-<div>
-<button id="startBtn">🎯 Bắt đầu tập</button>
-<button id="demoBtn">🤖 Demo</button>
-<button id="resetBtn">🔄 Làm lại</button>
-</div>
+<br>
+
+<button id="startBtn">
+🎯 Bắt đầu tập
+</button>
+
+<button id="demoBtn">
+🤖 Demo
+</button>
+
+<button id="resetBtn">
+🔄 Làm lại
+</button>
 
 </div>
 
 
-<!-- THÔNG TIN -->
+<!-- NỐT CẦN BẤM -->
 
 <div class="box">
 
@@ -249,29 +249,30 @@ Tự học piano bằng bàn phím máy tính
 </div>
 
 <div id="message">
-Chọn bài rồi bấm "Bắt đầu tập".
+Hãy chọn bài rồi bấm "Bắt đầu tập".
 </div>
 
-<div class="info">
 
-<div class="info-card">
+<div class="stats">
+
+<div class="stat">
 Đúng
-<div class="big" id="correct">0</div>
+<strong id="correct">0</strong>
 </div>
 
-<div class="info-card">
+<div class="stat">
 Sai
-<div class="big" id="wrong">0</div>
+<strong id="wrong">0</strong>
 </div>
 
-<div class="info-card">
+<div class="stat">
 Tiến độ
-<div class="big" id="progress">0%</div>
+<strong id="progress">0%</strong>
 </div>
 
-<div class="info-card">
+<div class="stat">
 Điểm
-<div class="big" id="score">0</div>
+<strong id="score">0</strong>
 </div>
 
 </div>
@@ -283,13 +284,13 @@ Tiến độ
 
 <div class="box">
 
-<h2>📖 Hướng dẫn bài</h2>
+<h2>📖 Hướng dẫn</h2>
 
 <div id="guide">
 Chọn một bài để xem hướng dẫn.
 </div>
 
-<h3>🎼 Chuỗi nốt</h3>
+<h3>🎵 Các nốt</h3>
 
 <div class="steps" id="steps"></div>
 
@@ -302,16 +303,12 @@ Chọn một bài để xem hướng dẫn.
 
 <h2>🎹 Piano</h2>
 
-<p>
-Bàn phím máy tính:
-<b>Q W E R T Y U I O P [ ] A S D F G H J K L ; '</b>
-</p>
-
-<div class="piano-wrap">
+<div class="keyboard-info">
+Điều khiển bằng:
+<strong>A S D F G H J K L</strong>
+</div>
 
 <div class="piano" id="piano"></div>
-
-</div>
 
 </div>
 
@@ -321,36 +318,44 @@ Bàn phím máy tính:
 <script>
 
 /* =====================================================
-   CẤU HÌNH BÀN PHÍM
+   9 PHÍM ĐIỀU KHIỂN
 ===================================================== */
 
 const keyboard = [
-    "q","w","e","r","t","y","u","i","o","p","[","]",
-    "a","s","d","f","g","h","j","k","l",";","'"
+    "a",
+    "s",
+    "d",
+    "f",
+    "g",
+    "h",
+    "j",
+    "k",
+    "l"
 ];
 
 
 /* =====================================================
-   NỐT TƯƠNG ỨNG
+   9 NỐT
 ===================================================== */
 
 const notes = [
-    "C3","D3","E3","F3","G3","A3","B3",
-    "C4","D4","E4","F4","G4",
-    "A4","B4","C5","D5","E5","F5",
-    "G5","A5","B5","C6","D6"
+    "C4",
+    "D4",
+    "E4",
+    "F4",
+    "G4",
+    "A4",
+    "B4",
+    "C5",
+    "D5"
 ];
 
 
-const frequencies = {
+/* =====================================================
+   TẦN SỐ
+===================================================== */
 
-    C3:130.81,
-    D3:146.83,
-    E3:164.81,
-    F3:174.61,
-    G3:196.00,
-    A3:220.00,
-    B3:246.94,
+const frequencies = {
 
     C4:261.63,
     D4:293.66,
@@ -361,212 +366,303 @@ const frequencies = {
     B4:493.88,
 
     C5:523.25,
-    D5:587.33,
-    E5:659.25,
-    F5:698.46,
-    G5:783.99,
-    A5:880.00,
-    B5:987.77,
+    D5:587.33
 
-    C6:1046.50,
-    D6:1174.66
 };
 
 
 /* =====================================================
    25 BÀI
-   Các bài luyện tập đơn giản/public-domain/truyền thống
+   TẤT CẢ CHỈ DÙNG 9 NỐT TRÊN
 ===================================================== */
 
 const songs = [
 
 {
-    name:"🎵 Bài 1 — Luyện 5 nốt",
-    difficulty:"⭐",
-    guide:"Làm quen với C4 đến G4. Bấm chậm và đều.",
-    notes:["C4","D4","E4","F4","G4","F4","E4","D4","C4"]
+name:"🎵 Bài 1 — Làm quen",
+difficulty:"⭐",
+guide:"Tập từng nốt từ C4 đến D5.",
+notes:[
+"C4","D4","E4","F4","G4",
+"A4","B4","C5","D5"
+]
 },
 
 {
-    name:"🎵 Bài 2 — Lên và xuống",
-    difficulty:"⭐",
-    guide:"Tập di chuyển lên rồi quay xuống.",
-    notes:["C4","D4","E4","F4","G4","A4","B4","A4","G4","F4","E4","D4","C4"]
+name:"🎵 Bài 2 — Đi lên",
+difficulty:"⭐",
+guide:"Đánh từ thấp lên cao.",
+notes:[
+"C4","D4","E4","F4","G4",
+"A4","B4","C5","D5",
+"C5","B4","A4","G4","F4","E4","D4","C4"
+]
 },
 
 {
-    name:"🎵 Bài 3 — Ngón cái",
-    difficulty:"⭐",
-    guide:"Tập các bước nhảy nhỏ giữa những nốt liền nhau.",
-    notes:["C4","E4","D4","F4","E4","G4","F4","A4","G4","E4","D4","C4"]
+name:"🎵 Bài 3 — Bước nhỏ",
+difficulty:"⭐",
+guide:"Tập các nốt liền nhau.",
+notes:[
+"C4","D4","E4","D4",
+"E4","F4","G4","F4",
+"E4","D4","C4"
+]
 },
 
 {
-    name:"🎵 Bài 4 — Nhịp đều",
-    difficulty:"⭐",
-    guide:"Mỗi nốt một nhịp. Không cần đánh nhanh.",
-    notes:["C4","C4","D4","D4","E4","E4","F4","F4","G4","G4"]
+name:"🎵 Bài 4 — Nhịp đều",
+difficulty:"⭐",
+guide:"Mỗi nốt đánh đều nhau.",
+notes:[
+"C4","C4","D4","D4",
+"E4","E4","F4","F4",
+"G4","G4"
+]
 },
 
 {
-    name:"🎵 Bài 5 — Đổi quãng",
-    difficulty:"⭐⭐",
-    guide:"Luyện chuyển từ nốt thấp sang nốt cao.",
-    notes:["C4","G4","D4","A4","E4","B4","F4","C5","G4","C4"]
+name:"🎵 Bài 5 — Lên xuống",
+difficulty:"⭐",
+guide:"Tập đổi hướng.",
+notes:[
+"C4","E4","D4","F4",
+"E4","G4","F4","A4",
+"G4","B4","A4","C5"
+]
 },
 
 {
-    name:"🎵 Bài 6 — Giai điệu 1",
-    difficulty:"⭐⭐",
-    guide:"Một bài luyện giai điệu ngắn.",
-    notes:["C4","D4","G4","E4","D4","C4","E4","G4","A4","G4","E4","C4"]
+name:"🎵 Bài 6 — Giai điệu 1",
+difficulty:"⭐⭐",
+guide:"Tập một giai điệu ngắn.",
+notes:[
+"C4","D4","G4","E4",
+"D4","C4","E4","G4",
+"A4","G4","E4","C4"
+]
 },
 
 {
-    name:"🎵 Bài 7 — Giai điệu 2",
-    difficulty:"⭐⭐",
-    guide:"Tập giữ nhịp ổn định.",
-    notes:["E4","D4","C4","D4","E4","E4","E4","D4","D4","D4","E4","G4","G4"]
+name:"🎵 Bài 7 — Giai điệu 2",
+difficulty:"⭐⭐",
+guide:"Giữ nhịp ổn định.",
+notes:[
+"E4","D4","C4","D4",
+"E4","E4","E4",
+"D4","D4","D4",
+"E4","G4","G4"
+]
 },
 
 {
-    name:"🎵 Bài 8 — Câu hỏi đáp",
-    difficulty:"⭐⭐",
-    guide:"Hai câu nhạc có dạng đối đáp.",
-    notes:["C4","E4","G4","E4","C4","D4","F4","A4","F4","D4"]
+name:"🎵 Bài 8 — Đối đáp",
+difficulty:"⭐⭐",
+guide:"Hai nhóm nốt đối nhau.",
+notes:[
+"C4","E4","G4","E4",
+"C4","D4","F4","A4",
+"F4","D4"
+]
 },
 
 {
-    name:"🎵 Bài 9 — Quãng tám",
-    difficulty:"⭐⭐",
-    guide:"Luyện chuyển giữa C4 và C5.",
-    notes:["C4","C5","B4","B3","A4","A3","G4","G3"]
+name:"🎵 Bài 9 — Nhảy nốt",
+difficulty:"⭐⭐",
+guide:"Luyện các bước nhảy.",
+notes:[
+"C4","G4","D4","A4",
+"E4","B4","F4","C5",
+"G4","C4"
+]
 },
 
 {
-    name:"🎵 Bài 10 — Nốt cao",
-    difficulty:"⭐⭐",
-    guide:"Làm quen vùng C5 đến D6.",
-    notes:["C5","D5","E5","F5","G5","A5","B5","C6","D6","C6","B5","A5"]
+name:"🎵 Bài 10 — Nốt cao",
+difficulty:"⭐⭐",
+guide:"Làm quen C5 và D5.",
+notes:[
+"C5","D5","C5","B4",
+"A4","B4","C5","D5",
+"C5","B4","A4"
+]
 },
 
 {
-    name:"🎵 Bài 11 — Frère Jacques",
-    difficulty:"⭐⭐",
-    guide:"Tập một giai điệu dân gian/truyền thống ngắn.",
-    notes:["C4","D4","E4","C4","C4","D4","E4","C4"]
+name:"🎵 Bài 11 — Frère Jacques",
+difficulty:"⭐⭐",
+guide:"Giai điệu truyền thống đơn giản.",
+notes:[
+"C4","D4","E4","C4",
+"C4","D4","E4","C4"
+]
 },
 
 {
-    name:"🎵 Bài 12 — Ode to Joy",
-    difficulty:"⭐⭐",
-    guide:"Tập đoạn giai điệu ngắn của tác phẩm thuộc public domain.",
-    notes:["E4","E4","F4","G4","G4","F4","E4","D4"]
+name:"🎵 Bài 12 — Ode to Joy",
+difficulty:"⭐⭐",
+guide:"Đoạn luyện tập ngắn.",
+notes:[
+"E4","E4","F4","G4",
+"G4","F4","E4","D4"
+]
 },
 
 {
-    name:"🎵 Bài 13 — Twinkle luyện tập",
-    difficulty:"⭐⭐",
-    guide:"Đoạn luyện tập ngắn dựa trên giai điệu truyền thống.",
-    notes:["C4","C4","G4","G4","A4","A4","G4"]
+name:"🎵 Bài 13 — Twinkle",
+difficulty:"⭐⭐",
+guide:"Đoạn luyện tập ngắn.",
+notes:[
+"C4","C4","G4","G4",
+"A4","A4","G4"
+]
 },
 
 {
-    name:"🎵 Bài 14 — London Bridge",
-    difficulty:"⭐⭐",
-    guide:"Luyện chuyển nốt gần nhau.",
-    notes:["G4","A4","G4","F4","E4","F4","G4","D4","E4","F4","E4","F4","G4"]
+name:"🎵 Bài 14 — London Bridge",
+difficulty:"⭐⭐",
+guide:"Tập chuyển nốt đều.",
+notes:[
+"G4","A4","G4","F4",
+"E4","F4","G4",
+"D4","E4","F4",
+"E4","F4","G4"
+]
 },
 
 {
-    name:"🎵 Bài 15 — Mary Had a Little Lamb",
-    difficulty:"⭐⭐",
-    guide:"Bài luyện nốt đơn giản cho người mới.",
-    notes:["E4","D4","C4","D4","E4","E4","E4"]
+name:"🎵 Bài 15 — Mary",
+difficulty:"⭐⭐",
+guide:"Bài tập dành cho người mới.",
+notes:[
+"E4","D4","C4","D4",
+"E4","E4","E4",
+"D4","D4","D4"
+]
 },
 
 {
-    name:"🎵 Bài 16 — Rain Rain",
-    difficulty:"⭐⭐",
-    guide:"Tập các cụm nốt ngắn.",
-    notes:["C4","C4","G4","G4","A4","A4","G4"]
+name:"🎵 Bài 16 — Rain",
+difficulty:"⭐⭐",
+guide:"Luyện lặp cụm nốt.",
+notes:[
+"C4","C4","G4","G4",
+"A4","A4","G4",
+"F4","F4","E4","E4","D4","D4","C4"
+]
 },
 
 {
-    name:"🎵 Bài 17 — Row Row Row",
-    difficulty:"⭐⭐⭐",
-    guide:"Luyện chuyển giữa các nhóm nốt.",
-    notes:["C4","C4","C4","D4","E4","E4","D4","E4","F4","G4"]
+name:"🎵 Bài 17 — Row Row",
+difficulty:"⭐⭐⭐",
+guide:"Tập giữ nhịp.",
+notes:[
+"C4","C4","C4","D4",
+"E4","E4","D4","E4",
+"F4","G4"
+]
 },
 
 {
-    name:"🎵 Bài 18 — Cầu thang",
-    difficulty:"⭐⭐⭐",
-    guide:"Luyện chạy nốt liên tục.",
-    notes:["C4","D4","E4","F4","G4","A4","B4","C5","B4","A4","G4","F4","E4","D4","C4"]
+name:"🎵 Bài 18 — Cầu thang",
+difficulty:"⭐⭐⭐",
+guide:"Chạy nốt liên tục.",
+notes:[
+"C4","D4","E4","F4","G4",
+"A4","B4","C5","D5",
+"C5","B4","A4","G4","F4","E4","D4","C4"
+]
 },
 
 {
-    name:"🎵 Bài 19 — Nhảy ba nốt",
-    difficulty:"⭐⭐⭐",
-    guide:"Tập các bước nhảy theo nhóm ba.",
-    notes:["C4","E4","G4","D4","F4","A4","E4","G4","B4","F4","A4","C5"]
+name:"🎵 Bài 19 — Nhóm ba",
+difficulty:"⭐⭐⭐",
+guide:"Tập theo nhóm ba nốt.",
+notes:[
+"C4","E4","G4",
+"D4","F4","A4",
+"E4","G4","B4",
+"F4","A4","C5"
+]
 },
 
 {
-    name:"🎵 Bài 20 — Vòng hợp âm",
-    difficulty:"⭐⭐⭐",
-    guide:"Luyện các nốt của những nhóm hợp âm cơ bản.",
-    notes:["C4","E4","G4","C5","G4","E4","D4","F4","A4","D5","A4","F4"]
+name:"🎵 Bài 20 — Hợp âm",
+difficulty:"⭐⭐⭐",
+guide:"Luyện các nhóm nốt.",
+notes:[
+"C4","E4","G4",
+"G4","E4","C4",
+"D4","F4","A4",
+"A4","F4","D4"
+]
 },
 
 {
-    name:"🎵 Bài 21 — Giai điệu cao",
-    difficulty:"⭐⭐⭐",
-    guide:"Tập vùng C5 đến D6.",
-    notes:["C5","E5","G5","A5","G5","E5","D5","F5","A5","G5","F5","D5"]
+name:"🎵 Bài 21 — Giai điệu cao",
+difficulty:"⭐⭐⭐",
+guide:"Tập vùng cao.",
+notes:[
+"C5","D5","C5","B4",
+"A4","B4","C5",
+"D5","C5","B4","A4"
+]
 },
 
 {
-    name:"🎵 Bài 22 — Chạy ngón",
-    difficulty:"⭐⭐⭐",
-    guide:"Đánh đều từng nốt, không cần tốc độ cao.",
-    notes:["C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5"]
+name:"🎵 Bài 22 — Chạy ngón",
+difficulty:"⭐⭐⭐",
+guide:"Đánh đều và chính xác.",
+notes:[
+"C4","D4","E4","F4",
+"G4","A4","B4","C5",
+"D5","C5","B4","A4",
+"G4","F4","E4","D4","C4"
+]
 },
 
 {
-    name:"🎵 Bài 23 — Đổi quãng nhanh",
-    difficulty:"⭐⭐⭐⭐",
-    guide:"Tập phản xạ khi chuyển từ thấp lên cao.",
-    notes:["C4","G4","C5","G4","D4","A4","D5","A4","E4","B4","E5","B4"]
+name:"🎵 Bài 23 — Đổi quãng",
+difficulty:"⭐⭐⭐⭐",
+guide:"Luyện phản xạ khi nhảy nốt.",
+notes:[
+"C4","G4","C5","G4",
+"D4","A4","D5","A4",
+"E4","B4","C5","B4"
+]
 },
 
 {
-    name:"🎵 Bài 24 — Luyện tốc độ",
-    difficulty:"⭐⭐⭐⭐",
-    guide:"Chỉ tăng tốc khi đã bấm chính xác.",
-    notes:["C4","D4","E4","F4","G4","F4","E4","D4","E4","F4","G4","A4","G4","F4","E4","D4"]
+name:"🎵 Bài 24 — Tốc độ",
+difficulty:"⭐⭐⭐⭐",
+guide:"Chỉ tăng tốc khi đã chính xác.",
+notes:[
+"C4","D4","E4","F4",
+"G4","F4","E4","D4",
+"E4","F4","G4","A4",
+"G4","F4","E4","D4"
+]
 },
 
 {
-    name:"🎵 Bài 25 — Final Challenge",
-    difficulty:"⭐⭐⭐⭐⭐",
-    guide:"Bài tổng hợp. Tập chậm trước rồi mới tăng tốc.",
-    notes:[
-        "C4","E4","G4","C5",
-        "B4","G4","E4","C4",
-        "D4","F4","A4","D5",
-        "C5","A4","F4","D4",
-        "E4","G4","B4","E5",
-        "D5","B4","G4","E4"
-    ]
+name:"🎵 Bài 25 — Final Challenge",
+difficulty:"⭐⭐⭐⭐⭐",
+guide:"Bài tổng hợp. Hãy tập chậm trước.",
+notes:[
+"C4","E4","G4","C5",
+"B4","G4","E4","C4",
+"D4","F4","A4","D5",
+"C5","A4","F4","D4",
+"E4","G4","B4","C5",
+"D5","B4","G4","E4"
+]
 }
 
 ];
 
 
 /* =====================================================
-   TẠO SELECT
+   TẠO DANH SÁCH BÀI
 ===================================================== */
 
 const songSelect =
@@ -579,7 +675,7 @@ songs.forEach((song,index)=>{
 
     option.value=index;
 
-    option.textContent =
+    option.textContent=
         song.name;
 
     songSelect.appendChild(option);
@@ -588,16 +684,15 @@ songs.forEach((song,index)=>{
 
 
 /* =====================================================
-   TẠO PIANO
+   TẠO PIANO 9 PHÍM
 ===================================================== */
 
 const piano =
     document.getElementById("piano");
 
-
 keyboard.forEach((key,index)=>{
 
-    const div =
+    const div=
         document.createElement("div");
 
     div.className="key";
@@ -609,14 +704,15 @@ keyboard.forEach((key,index)=>{
         key;
 
     div.innerHTML=`
-        <span>
-            <div class="note">
-                ${notes[index]}
-            </div>
-            <div class="computer">
-                ${key.toUpperCase()}
-            </div>
-        </span>
+
+        <div class="note">
+            ${notes[index]}
+        </div>
+
+        <div class="computer">
+            ${key.toUpperCase()}
+        </div>
+
     `;
 
     div.addEventListener(
@@ -637,13 +733,12 @@ keyboard.forEach((key,index)=>{
 
 let audioContext=null;
 
-
 function getAudio(){
 
     if(!audioContext){
 
-        audioContext =
-            new (
+        audioContext=
+            new(
                 window.AudioContext ||
                 window.webkitAudioContext
             )();
@@ -660,24 +755,28 @@ function getAudio(){
 }
 
 
-function playNote(note,duration=.45){
+function playNote(
+    note,
+    duration=.45
+){
 
-    const freq=
+    const frequency=
         frequencies[note];
 
-    if(!freq) return;
+    if(!frequency)return;
 
     const ctx=getAudio();
 
-    const osc=
+    const oscillator=
         ctx.createOscillator();
 
     const gain=
         ctx.createGain();
 
-    osc.type="triangle";
+    oscillator.type="triangle";
 
-    osc.frequency.value=freq;
+    oscillator.frequency.value=
+        frequency;
 
     gain.gain.setValueAtTime(
         .0001,
@@ -694,13 +793,13 @@ function playNote(note,duration=.45){
         ctx.currentTime+duration
     );
 
-    osc.connect(gain);
+    oscillator.connect(gain);
 
     gain.connect(ctx.destination);
 
-    osc.start();
+    oscillator.start();
 
-    osc.stop(
+    oscillator.stop(
         ctx.currentTime+
         duration+
         .05
@@ -711,7 +810,7 @@ function playNote(note,duration=.45){
 
 
 /* =====================================================
-   FLASH PHÍM
+   SÁNG PHÍM
 ===================================================== */
 
 function flashKey(note){
@@ -725,14 +824,18 @@ function flashKey(note){
 
     key.classList.add("active");
 
-    setTimeout(()=>{
-        key.classList.remove("active");
-    },160);
+    setTimeout(
+        ()=>{
+            key.classList.remove("active");
+        },
+        180
+    );
+
 }
 
 
 /* =====================================================
-   TRẠNG THÁI
+   BIẾN
 ===================================================== */
 
 let currentSong=null;
@@ -754,17 +857,20 @@ let demoTimer=null;
 
 function loadSong(){
 
-    const index=
-        Number(songSelect.value);
-
     currentSong=
-        songs[index];
+        songs[
+            Number(songSelect.value)
+        ];
 
     currentIndex=0;
 
     correct=0;
 
     wrong=0;
+
+    training=false;
+
+    clearTimeout(demoTimer);
 
     updateStats();
 
@@ -777,8 +883,6 @@ function loadSong(){
 
 function showGuide(){
 
-    if(!currentSong)return;
-
     document.getElementById(
         "guide"
     ).innerHTML=`
@@ -790,10 +894,12 @@ function showGuide(){
 
         ${currentSong.guide}<br><br>
 
-        <b>⌨️ Cách chơi:</b><br>
+        <b>🎹 Cách đánh:</b><br>
 
-        Bấm phím trên máy tính tương ứng
-        với nốt đang sáng màu xanh.
+        ${currentSong.notes
+            .map((n,i)=>`${i+1}. ${n}`)
+            .join(" → ")
+        }
     `;
 
 
@@ -824,13 +930,36 @@ function showGuide(){
 }
 
 
+/* =====================================================
+   HIỆN NỐT CẦN BẤM
+===================================================== */
+
 function showTarget(){
 
     document
         .querySelectorAll(".key")
-        .forEach(key=>{
-            key.classList.remove("target");
-        });
+        .forEach(
+            key=>{
+                key.classList.remove(
+                    "target"
+                );
+            }
+        );
+
+
+    document
+        .querySelectorAll(".step")
+        .forEach(
+            step=>{
+                step.classList.remove(
+                    "current"
+                );
+
+                step.classList.remove(
+                    "done"
+                );
+            }
+        );
 
 
     if(
@@ -844,7 +973,6 @@ function showTarget(){
         ).textContent="🎉";
 
         return;
-
     }
 
 
@@ -871,39 +999,32 @@ function showTarget(){
 
     document
         .querySelectorAll(".step")
-        .forEach(step=>{
+        .forEach(
+            step=>{
 
-            step.classList.remove(
-                "current"
-            );
+                const i=
+                    Number(step.dataset.index);
 
-            step.classList.remove(
-                "done"
-            );
+                if(i<currentIndex){
+                    step.classList.add(
+                        "done"
+                    );
+                }
 
-        });
+                if(i===currentIndex){
+                    step.classList.add(
+                        "current"
+                    );
+                }
 
-
-    document
-        .querySelectorAll(".step")
-        .forEach(step=>{
-
-            const i=
-                Number(step.dataset.index);
-
-            if(i<currentIndex)
-                step.classList.add("done");
-
-            if(i===currentIndex)
-                step.classList.add("current");
-
-        });
+            }
+        );
 
 }
 
 
 /* =====================================================
-   CHẤM ĐIỂM
+   BẤM NỐT
 ===================================================== */
 
 function pressNote(note){
@@ -916,14 +1037,10 @@ function pressNote(note){
         document.getElementById(
             "message"
         ).textContent=
-            `🎹 Bạn vừa bấm ${note}`;
+            `🎹 Đã bấm ${note}`;
 
         return;
-
     }
-
-
-    if(!currentSong)return;
 
 
     const target=
@@ -955,14 +1072,22 @@ function pressNote(note){
             ).textContent=
                 "🏆 Hoàn thành!";
 
-
             document.getElementById(
                 "message"
             ).textContent=
-                `🎉 Hoàn thành ${currentSong.name}!`;
+                `🎉 Bạn đã hoàn thành ${currentSong.name}!`;
+
+            document
+                .querySelectorAll(".key")
+                .forEach(
+                    key=>{
+                        key.classList.remove(
+                            "target"
+                        );
+                    }
+                );
 
         }
-
         else{
 
             showTarget();
@@ -977,7 +1102,7 @@ function pressNote(note){
         document.getElementById(
             "message"
         ).textContent=
-            `❌ Sai rồi — cần bấm ${target}`;
+            `❌ Sai! Cần bấm ${target}`;
 
     }
 
@@ -998,7 +1123,6 @@ function updateStats(){
         ? currentSong.notes.length
         : 0;
 
-
     const progress=
         total
         ? Math.round(
@@ -1008,10 +1132,11 @@ function updateStats(){
         )
         : 0;
 
-
     const score=
-        correct*10-
-        wrong*2;
+        Math.max(
+            0,
+            correct*10-wrong*2
+        );
 
 
     document.getElementById(
@@ -1019,29 +1144,26 @@ function updateStats(){
     ).textContent=
         correct;
 
-
     document.getElementById(
         "wrong"
     ).textContent=
         wrong;
-
 
     document.getElementById(
         "progress"
     ).textContent=
         progress+"%";
 
-
     document.getElementById(
         "score"
     ).textContent=
-        Math.max(0,score);
+        score;
 
 }
 
 
 /* =====================================================
-   BẮT ĐẦU TẬP
+   BẮT ĐẦU
 ===================================================== */
 
 document.getElementById(
@@ -1057,7 +1179,7 @@ document.getElementById(
         document.getElementById(
             "message"
         ).textContent=
-            "🎯 Bắt đầu! Hãy bấm nốt đang sáng.";
+            "🎯 Bắt đầu! Hãy bấm phím màu xanh.";
 
         showTarget();
 
@@ -1075,16 +1197,12 @@ document.getElementById(
     "click",
     ()=>{
 
-        clearTimeout(demoTimer);
-
-        training=false;
-
         loadSong();
 
         document.getElementById(
             "message"
         ).textContent=
-            "🔄 Đã làm lại bài.";
+            "🔄 Đã làm lại.";
 
     }
 );
@@ -1098,16 +1216,12 @@ songSelect.addEventListener(
     "change",
     ()=>{
 
-        clearTimeout(demoTimer);
-
-        training=false;
-
         loadSong();
 
         document.getElementById(
             "message"
         ).textContent=
-            "Đã chọn bài. Bấm Bắt đầu tập.";
+            "🎵 Đã chọn bài.";
 
     }
 );
@@ -1123,36 +1237,41 @@ document.getElementById(
     "click",
     ()=>{
 
-        clearTimeout(demoTimer);
-
         loadSong();
 
         training=false;
 
-        let i=0;
+        clearTimeout(demoTimer);
+
+        let index=0;
 
 
-        function next(){
+        document.getElementById(
+            "message"
+        ).textContent=
+            "🤖 Đang chạy demo...";
+
+
+        function demoNext(){
 
             if(
-                i>=
+                index>=
                 currentSong.notes.length
             ){
 
                 document.getElementById(
                     "message"
                 ).textContent=
-                    "🤖 Demo hoàn thành.";
+                    "🤖 Demo xong!";
 
                 showTarget();
 
                 return;
-
             }
 
 
             const note=
-                currentSong.notes[i];
+                currentSong.notes[index];
 
 
             document.getElementById(
@@ -1163,29 +1282,23 @@ document.getElementById(
 
             playNote(
                 note,
-                .42
+                .4
             );
 
 
-            i++;
+            index++;
 
 
             demoTimer=
                 setTimeout(
-                    next,
+                    demoNext,
                     470
                 );
 
         }
 
 
-        document.getElementById(
-            "message"
-        ).textContent=
-            "🤖 Đang phát demo...";
-
-
-        next();
+        demoNext();
 
     }
 );
