@@ -872,8 +872,8 @@ function playSong() {
             },
 
             body: JSON.stringify({
-                title: "Twinkle Twinkle Little Star"
-            })
+    title: document.getElementById("songSelect")?.value || "twinkle"
+})
         });
 
         const data = await response.json();
