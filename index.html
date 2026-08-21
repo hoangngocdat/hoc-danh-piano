@@ -880,24 +880,35 @@ function playSong() {
         }, index * 300);
     });
 }
-    async function receiveSong() {
+   async function receiveSong() {
 
     try {
 
-        const response = await fetch("/api/piano");
+        const response = await fetch("/api/piano", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                title: "Twinkle Twinkle Little Star"
+            })
+        });
+
         const data = await response.json();
 
         console.log("API trả về:", data);
 
-        if (!data.success) {
-            alert("API không trả về dữ liệu bài hát!");
+        if (!response.ok || !data.success) {
+            alert("❌ API lỗi: " + (data.error || "Không lấy được bài"));
             return;
         }
 
         const notes = data.notes;
 
         if (!Array.isArray(notes) || notes.length === 0) {
-            alert("API chưa có dữ liệu notes!");
+            alert("❌ API không có notes!");
             return;
         }
 
@@ -906,7 +917,7 @@ function playSong() {
         alert(`✅ Đã nhận ${notes.length} nốt 🎹`);
 
         document.getElementById("status").textContent =
-            `Đã nhận ${notes.length} nốt 🎵`;
+            `Đã nhận bài: ${data.title} 🎵`;
 
     } catch (error) {
 
