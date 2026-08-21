@@ -836,23 +836,20 @@ function playSong() {
         return;
     }
 
-    clearTimeout(timer);
+    const ctx = getAudioContext();
 
-    currentSong = window.songNotes.map(note => {
+    if (ctx.state === "suspended") {
+        ctx.resume();
+    }
 
-        if (Array.isArray(note)) {
-            return [
-                note[0],
-                Number(note[1]) || 0.5
-            ];
-        }
-
+    currentSong = window.songNotes.map(item => {
         return [
-            note,
-            0.5
+            item.note,
+            Number(item.duration) || 0.5
         ];
-
     });
+
+    console.log("🎹 Bài chuẩn bị đánh:", currentSong);
 
     currentIndex = 0;
     playing = true;
@@ -862,23 +859,6 @@ function playSong() {
         "🎹 Đang tự động đánh bài từ API...";
 
     playNext();
-}
-    function playSong() {
-    if (!window.songNotes || !Array.isArray(window.songNotes)) {
-        alert("Hãy bấm 🎵 Nhận bài trước!");
-        return;
-    }
-
-    console.log("Đang phát:", window.songNotes);
-
-    window.songNotes.forEach((note, index) => {
-        setTimeout(() => {
-            console.log("Đánh nốt:", note);
-
-            // B11 hiện tại chỉ kiểm tra dữ liệu.
-            // B12 sẽ nối phần này với phím piano thật.
-        }, index * 300);
-    });
 }
    async function receiveSong() {
 
