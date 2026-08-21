@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Auto Piano 🎹</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #111827, #312e81);
+            color: white;
+            padding: 20px;
+        }
+
+        .app {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 38px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+        }
+
+        .box {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            border: none;
+            background: #111827;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            border: none;
+            padding: 12px 18px;
+            margin: 12px 5px 0 0;
+            border-radius: 10px;
+            background: #6366f1;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        #status {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        #currentNote {
+            text-align: center;
+            font-size: 50px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* PIANO */
+
+        #piano {
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+            padding: 20px 5px;
+        }
+
+        .key {
+            width: 60px;
+            height: 220px;
+            background: white;
+            color: black;
+            border: 1px solid #555;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .key.active {
+            background: #818cf8;
+            transform: translateY(5px);
+        }
+
+        @media(max-width:700px) {
+
+            .key {
+                width: 48px;
+                height: 190px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <h1>🎹 Auto Piano</h1>
+
+    <p class="subtitle">
+        Piano tự động đánh bài
+    </p>
+
+    <div class="box">
+
+        <h2>🎵 Chọn bài</h2>
+
+        <select id="songSelect">
+
+            <option value="twinkle">
+                Twinkle Twinkle Little Star
+            </option>
+
+            <option value="ode">
+                Ode to Joy
+            </option>
+
+            <option value="happy">
+                Happy Birthday
+            </option>
+
+        </select>
+
+        <br>
+
+        <button id="loadBtn">
+            📥 Tải bài
+        </button>
+
+        <button id="playBtn">
+            ▶️ Play
+        </button>
+
+        <button id="pauseBtn">
+            ⏸️ Pause
+        </button>
+
+        <button id="stopBtn">
+            ⏹️ Stop
+        </button>
+
+    </div>
+
+    <div class="box">
+
+        <div id="status">
+            Sẵn sàng 🎹
+        </div>
+
+        <div id="currentNote">
+            —
+        </div>
+
+    </div>
+
+    <div class="box">
+
+        <h2>🎹 Piano</h2>
+
+        <div id="piano">
+
+            <div class="key" data-note="C4">C</div>
+            <div class="key" data-note="D4">D</div>
+            <div class="key" data-note="E4">E</div>
+            <div class="key" data-note="F4">F</div>
+            <div class="key" data-note="G4">G</div>
+            <div class="key" data-note="A4">A</div>
+            <div class="key" data-note="B4">B</div>
+
+            <div class="key" data-note="C5">C</div>
+            <div class="key" data-note="D5">D</div>
+            <div class="key" data-note="E5">E</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    /*
+       Tạm thời chưa có JavaScript.
+       Bước tiếp theo sẽ thêm âm thanh
+       và chức năng tự động đánh.
+    */
+
+</script>
+
+</body>
+</html>
