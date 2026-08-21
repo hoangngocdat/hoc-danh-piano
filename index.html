@@ -829,67 +829,39 @@ function escapeHTML(text) {
     return div.innerHTML;
 
 }
-async function receiveSong() {
-    try {
-        const response = await fetch("/api/piano");
-        const data = await response.json();
+function playSong() {
 
-        console.log("API trả về:", data);
-
-        if (!data.success) {
-            alert("API không trả về dữ liệu bài hát!");
-            return;
-        }
-
-        // Lấy danh sách nốt từ API
-        const notes = data.notes;
-
-        console.log("Notes:", notes);
-
-        if (!notes || !Array.isArray(notes)) {
-            alert("API chưa có dữ liệu notes!");
-            return;
-        }
-
-        // Lưu notes để bước sau cho piano tự đánh
-        window.songNotes = notes;
-
-        alert(`Đã nhận ${notes.length} nốt 🎹`);
-
-    } catch (error) {
-        console.error(error);
-        alert("Không kết nối được Piano API!");
+    if (!window.songNotes || !Array.isArray(window.songNotes)) {
+        alert("Hãy bấm 🎵 Nhận bài trước!");
+        return;
     }
-}
-async function receiveSong() {
-    try {
-        const response = await fetch("/api/piano");
-        const data = await response.json();
 
-        console.log("API trả về:", data);
+    clearTimeout(timer);
 
-        if (!data.success) {
-            alert("API không trả về dữ liệu bài hát!");
-            return;
+    currentSong = window.songNotes.map(note => {
+
+        if (Array.isArray(note)) {
+            return [
+                note[0],
+                Number(note[1]) || 0.5
+            ];
         }
 
-        const notes = data.notes;
+        return [
+            note,
+            0.5
+        ];
 
-        console.log("Notes:", notes);
+    });
 
-        if (!notes || !Array.isArray(notes)) {
-            alert("API chưa có dữ liệu notes!");
-            return;
-        }
+    currentIndex = 0;
+    playing = true;
+    paused = false;
 
-        window.songNotes = notes;
+    document.getElementById("status").textContent =
+        "🎹 Đang tự động đánh bài từ API...";
 
-        alert(`Đã nhận ${notes.length} nốt 🎹`);
-
-    } catch (error) {
-        console.error(error);
-        alert("Không kết nối được Piano API!");
-    }
+    playNext();
 }
     function playSong() {
     if (!window.songNotes || !Array.isArray(window.songNotes)) {
