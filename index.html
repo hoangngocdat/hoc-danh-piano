@@ -713,7 +713,31 @@ const youtubeUrl =
 const youtubeResult =
     document.getElementById("youtubeResult");
 
+async function testPianoAPI() {
 
+    try {
+
+        const response =
+            await fetch("/api/piano");
+
+        const data =
+            await response.json();
+
+        console.log(
+            "Piano API:",
+            data
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Không kết nối được API:",
+            error
+        );
+
+    }
+
+}
 youtubeBtn.addEventListener(
     "click",
     async () => {
