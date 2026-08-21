@@ -880,6 +880,42 @@ function playSong() {
         }, index * 300);
     });
 }
+    async function receiveSong() {
+
+    try {
+
+        const response = await fetch("/api/piano");
+        const data = await response.json();
+
+        console.log("API trả về:", data);
+
+        if (!data.success) {
+            alert("API không trả về dữ liệu bài hát!");
+            return;
+        }
+
+        const notes = data.notes;
+
+        if (!Array.isArray(notes) || notes.length === 0) {
+            alert("API chưa có dữ liệu notes!");
+            return;
+        }
+
+        window.songNotes = notes;
+
+        alert(`✅ Đã nhận ${notes.length} nốt 🎹`);
+
+        document.getElementById("status").textContent =
+            `Đã nhận ${notes.length} nốt 🎵`;
+
+    } catch (error) {
+
+        console.error("Lỗi:", error);
+
+        alert("❌ Không kết nối được Piano API!");
+
+    }
+}
 </script>
 <button onclick="receiveSong()">🎵 Nhận bài</button>
 <button onclick="playSong()">▶️ Play</button>
