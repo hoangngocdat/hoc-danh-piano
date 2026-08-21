@@ -76,18 +76,28 @@ export default async function handler(req, res) {
     ]
 
 };
-        return res.status(200).json({
+      const songKey = title.toLowerCase().trim();
 
-            success: true,
+const notes = songs[songKey];
 
-            title: title,
+if (!notes) {
+    return res.status(404).json({
+        success: false,
+        error: "Chưa có dữ liệu nốt cho bài này"
+    });
+}
 
-            notes: demoNotes,
+return res.status(200).json({
 
-            message: "Đã lấy dữ liệu nốt 🎹"
+    success: true,
 
-        });
+    title: title,
 
+    notes: notes,
+
+    message: "Đã lấy dữ liệu nốt 🎹"
+
+});
     } catch (error) {
 
         return res.status(500).json({
