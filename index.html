@@ -829,6 +829,38 @@ function escapeHTML(text) {
     return div.innerHTML;
 
 }
+async function receiveSong() {
+    try {
+        const response = await fetch("/api/piano");
+        const data = await response.json();
+
+        console.log("API trả về:", data);
+
+        if (!data.success) {
+            alert("API không trả về dữ liệu bài hát!");
+            return;
+        }
+
+        // Lấy danh sách nốt từ API
+        const notes = data.notes;
+
+        console.log("Notes:", notes);
+
+        if (!notes || !Array.isArray(notes)) {
+            alert("API chưa có dữ liệu notes!");
+            return;
+        }
+
+        // Lưu notes để bước sau cho piano tự đánh
+        window.songNotes = notes;
+
+        alert(`Đã nhận ${notes.length} nốt 🎹`);
+
+    } catch (error) {
+        console.error(error);
+        alert("Không kết nối được Piano API!");
+    }
+}
 </script>
 </body>
 </html>
