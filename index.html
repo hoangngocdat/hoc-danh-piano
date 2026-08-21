@@ -812,7 +812,7 @@ if (!apiResponse.ok || !apiData.success) {
 }
 
 window.songNotes = apiData.notes;
-
+console.log("🎹 NOTES TỪ YOUTUBE/API:", apiData.notes);
 youtubeResult.innerHTML += `
     <br><br>
     🎹 Đã lấy ${apiData.notes.length} nốt!
