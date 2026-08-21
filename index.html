@@ -791,28 +791,34 @@ const apiResponse = await fetch("/api/piano", {
 })
 });
 
+const apiResponse = await fetch("/api/piano", {
+    method: "POST",
+
+    headers: {
+        "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+        title: data.title
+    })
+});
+
 const apiData = await apiResponse.json();
 
 if (!apiResponse.ok || !apiData.success) {
     throw new Error(
-        apiData.error || "API lỗi"
+        apiData.error || "API không tìm thấy bài này"
     );
 }
 
+window.songNotes = apiData.notes;
+
 youtubeResult.innerHTML += `
+    <br><br>
+    🎹 Đã lấy ${apiData.notes.length} nốt!
     <br>
-    ✅ API đã nhận bài thành công!
+    ✅ Bây giờ có thể bấm Play.
 `;
-        } catch (error) {
-
-            youtubeResult.textContent =
-                "❌ Link YouTube không hợp lệ " +
-                "hoặc không thể lấy thông tin bài.";
-
-        }
-
-    }
-);
 
 
 /* ==============================
