@@ -786,9 +786,9 @@ const apiResponse = await fetch("/api/piano", {
         "Content-Type": "application/json"
     },
 
-    body: JSON.stringify({
-        title: data.title
-    })
+  body: JSON.stringify({
+    title: document.getElementById("songSelect")?.value || "Twinkle Twinkle Little Star"
+})
 });
 
 const apiData = await apiResponse.json();
