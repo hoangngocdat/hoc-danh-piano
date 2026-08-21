@@ -19,86 +19,51 @@ export default async function handler(req, res) {
         }
 
         /*
-         * BỘ NỐT TEST
-         * Dùng để kiểm tra hệ thống Auto Piano.
+         * DỮ LIỆU TEST
+         * Hiện tại dùng để kiểm tra luồng:
+         *
+         * YouTube
+         * ↓
+         * API
+         * ↓
+         * notes
+         * ↓
+         * Piano
          */
 
-      const songs = {
+        const demoNotes = [
+            { note: "C4", duration: 0.5 },
+            { note: "C4", duration: 0.5 },
+            { note: "G4", duration: 0.5 },
+            { note: "G4", duration: 0.5 },
+            { note: "A4", duration: 0.5 },
+            { note: "A4", duration: 0.5 },
+            { note: "G4", duration: 1 },
 
-    twinkle: [
-        { note: "C4", duration: 0.5 },
-        { note: "C4", duration: 0.5 },
-        { note: "G4", duration: 0.5 },
-        { note: "G4", duration: 0.5 },
-        { note: "A4", duration: 0.5 },
-        { note: "A4", duration: 0.5 },
-        { note: "G4", duration: 1 },
-        { note: "F4", duration: 0.5 },
-        { note: "F4", duration: 0.5 },
-        { note: "E4", duration: 0.5 },
-        { note: "E4", duration: 0.5 },
-        { note: "D4", duration: 0.5 },
-        { note: "D4", duration: 0.5 },
-        { note: "C4", duration: 1 }
-    ],
+            { note: "F4", duration: 0.5 },
+            { note: "F4", duration: 0.5 },
+            { note: "E4", duration: 0.5 },
+            { note: "E4", duration: 0.5 },
+            { note: "D4", duration: 0.5 },
+            { note: "D4", duration: 0.5 },
+            { note: "C4", duration: 1 }
+        ];
 
-    ode: [
-        { note: "E4", duration: 0.5 },
-        { note: "E4", duration: 0.5 },
-        { note: "F4", duration: 0.5 },
-        { note: "G4", duration: 0.5 },
-        { note: "G4", duration: 0.5 },
-        { note: "F4", duration: 0.5 },
-        { note: "E4", duration: 0.5 },
-        { note: "D4", duration: 0.5 },
-        { note: "C4", duration: 0.5 },
-        { note: "C4", duration: 0.5 },
-        { note: "D4", duration: 0.5 },
-        { note: "E4", duration: 0.5 },
-        { note: "E4", duration: 0.75 },
-        { note: "D4", duration: 0.25 },
-        { note: "D4", duration: 1 }
-    ],
+        return res.status(200).json({
 
-    happy: [
-        { note: "C4", duration: 0.4 },
-        { note: "C4", duration: 0.4 },
-        { note: "D4", duration: 0.8 },
-        { note: "C4", duration: 0.8 },
-        { note: "F4", duration: 0.8 },
-        { note: "E4", duration: 1 },
-        { note: "C4", duration: 0.4 },
-        { note: "C4", duration: 0.4 },
-        { note: "D4", duration: 0.8 },
-        { note: "C4", duration: 0.8 },
-        { note: "G4", duration: 0.8 },
-        { note: "F4", duration: 1 }
-    ]
+            success: true,
 
-};
-      const songKey = title.toLowerCase().trim();
+            title: title,
 
-const notes = songs[songKey];
+            notes: demoNotes,
 
-if (!notes) {
-    return res.status(404).json({
-        success: false,
-        error: "Chưa có dữ liệu nốt cho bài này"
-    });
-}
+            message: "Đã tạo dữ liệu nốt test 🎹"
 
-return res.status(200).json({
+        });
 
-    success: true,
-
-    title: title,
-
-    notes: notes,
-
-    message: "Đã lấy dữ liệu nốt 🎹"
-
-});
     } catch (error) {
+
+        console.error(error);
 
         return res.status(500).json({
             success: false,
