@@ -1,298 +1,646 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <title>Auto Piano 🎹</title>
+<title>🎹 Piano Trainer</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+*{
+    box-sizing:border-box;
+}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #111827, #312e81);
-            color: white;
-            padding: 20px;
-        }
+body{
+    margin:0;
+    min-height:100vh;
+    background:linear-gradient(135deg,#0f172a,#312e81);
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:20px;
+}
 
-        .app {
-            max-width: 1000px;
-            margin: auto;
-        }
+.app{
+    max-width:1200px;
+    margin:auto;
+}
 
-        h1 {
-            text-align: center;
-            font-size: 38px;
-            margin-bottom: 5px;
-        }
+h1{
+    text-align:center;
+    font-size:40px;
+    margin:10px 0 5px;
+}
 
-        .subtitle {
-            text-align: center;
-            color: #cbd5e1;
-            margin-bottom: 25px;
-        }
+.subtitle{
+    text-align:center;
+    color:#cbd5e1;
+    margin-bottom:25px;
+}
 
-        .box {
-            background: rgba(255,255,255,.08);
-            border: 1px solid rgba(255,255,255,.15);
-            border-radius: 18px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+.box{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+}
 
-        h2 {
-            margin-top: 0;
-        }
+select{
+    width:100%;
+    padding:13px;
+    border:0;
+    border-radius:10px;
+    background:#111827;
+    color:white;
+    font-size:16px;
+}
 
-        select,
-        input {
-            width: 100%;
-            padding: 13px;
-            border-radius: 10px;
-            border: none;
-            background: #111827;
-            color: white;
-            font-size: 16px;
-        }
+button{
+    border:0;
+    border-radius:10px;
+    padding:12px 18px;
+    margin:10px 6px 0 0;
+    background:#6366f1;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-        button {
-            border: none;
-            padding: 12px 18px;
-            margin: 12px 5px 0 0;
-            border-radius: 10px;
-            background: #6366f1;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
+button:hover{
+    transform:translateY(-2px);
+}
 
-        button:hover {
-            transform: translateY(-2px);
-        }
+.info{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-top:15px;
+}
 
-        #status {
-            text-align: center;
-            font-size: 20px;
-        }
+.info-card{
+    background:rgba(0,0,0,.2);
+    border-radius:12px;
+    padding:15px;
+    text-align:center;
+}
 
-        #currentNote {
-            text-align: center;
-            font-size: 50px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
+.big{
+    font-size:32px;
+    font-weight:bold;
+    margin-top:5px;
+}
 
-        #youtubeResult {
-            margin-top: 15px;
-            color: #cbd5e1;
-            line-height: 1.6;
-        }
+#guide{
+    line-height:1.7;
+    color:#dbeafe;
+}
 
-        #piano {
-            display: flex;
-            justify-content: center;
-            overflow-x: auto;
-            padding: 20px 5px;
-        }
+#nextNote{
+    text-align:center;
+    font-size:55px;
+    font-weight:bold;
+    margin:10px;
+}
 
-        .key {
-            width: 60px;
-            height: 220px;
-            background: white;
-            color: black;
-            border: 1px solid #555;
-            border-radius: 0 0 8px 8px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-        }
+#message{
+    text-align:center;
+    min-height:28px;
+    font-size:18px;
+}
 
-        .key.active {
-            background: #818cf8;
-            transform: translateY(5px);
-        }
+.piano-wrap{
+    overflow-x:auto;
+    padding:20px 0;
+}
 
-        @media(max-width:700px) {
+.piano{
+    display:flex;
+    min-width:1000px;
+    justify-content:center;
+}
 
-            .key {
-                width: 48px;
-                height: 190px;
-            }
+.key{
+    position:relative;
+    flex:1;
+    min-width:45px;
+    height:230px;
+    background:#fff;
+    color:#111;
+    border:1px solid #555;
+    border-radius:0 0 8px 8px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:15px;
+    cursor:pointer;
+    user-select:none;
+    transition:.08s;
+}
 
-            h1 {
-                font-size: 30px;
-            }
-        }
-    </style>
+.key:hover{
+    background:#e2e8f0;
+}
+
+.key.active{
+    background:#818cf8;
+    transform:translateY(5px);
+}
+
+.key.target{
+    box-shadow:inset 0 -12px 0 #22c55e;
+}
+
+.key.black{
+    background:#111;
+    color:white;
+    height:145px;
+    min-width:34px;
+    margin:0 -17px;
+    z-index:5;
+    border-radius:0 0 6px 6px;
+}
+
+.key.black.active{
+    background:#6366f1;
+}
+
+.key span{
+    pointer-events:none;
+}
+
+.key .note{
+    font-size:13px;
+}
+
+.key .computer{
+    font-size:15px;
+    margin-top:5px;
+}
+
+.steps{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:12px;
+}
+
+.step{
+    padding:8px 11px;
+    border-radius:8px;
+    background:#1e293b;
+}
+
+.step.current{
+    background:#22c55e;
+    color:#052e16;
+    font-weight:bold;
+}
+
+.step.done{
+    opacity:.5;
+}
+
+@media(max-width:700px){
+    .info{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    h1{
+        font-size:30px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-    <h1>🎹 Auto Piano</h1>
+<h1>🎹 Piano Trainer</h1>
 
-    <p class="subtitle">
-        Piano tự động đánh bài
-    </p>
-
-
-    <!-- ==============================
-         YOUTUBE
-    =============================== -->
-
-    <div class="box">
-
-        <h2>🔗 Chọn bài từ YouTube</h2>
-
-        <input
-            id="youtubeUrl"
-            type="text"
-            placeholder="Dán link YouTube vào đây..."
-        >
-
-        <button id="youtubeBtn">
-            🔎 Nhận bài
-        </button>
-
-        <div id="youtubeResult">
-            Chưa chọn bài YouTube.
-        </div>
-
-    </div>
+<div class="subtitle">
+Tự học piano bằng bàn phím máy tính
+</div>
 
 
-    <!-- ==============================
-         CHỌN BÀI
-    =============================== -->
+<!-- CHỌN BÀI -->
 
-    <div class="box">
+<div class="box">
 
-        <h2>🎵 Chọn bài</h2>
+<h2>📚 Chọn bài luyện tập</h2>
 
-        <select id="songSelect">
+<select id="songSelect"></select>
 
-            <option value="twinkle">
-                Twinkle Twinkle Little Star
-            </option>
+<div>
+<button id="startBtn">🎯 Bắt đầu tập</button>
+<button id="demoBtn">🤖 Demo</button>
+<button id="resetBtn">🔄 Làm lại</button>
+</div>
 
-            <option value="ode">
-                Ode to Joy
-            </option>
-
-            <option value="happy">
-                Happy Birthday
-            </option>
-
-        </select>
-
-        <br>
-
-        <button id="loadBtn">
-            📥 Tải bài
-        </button>
-
-        <button id="receiveBtn">
-            🎵 Nhận bài từ API
-        </button>
-
-        <button id="playBtn">
-            ▶️ Play
-        </button>
-
-        <button id="pauseBtn">
-            ⏸️ Pause
-        </button>
-
-        <button id="stopBtn">
-            ⏹️ Stop
-        </button>
-
-    </div>
+</div>
 
 
-    <!-- ==============================
-         TRẠNG THÁI
-    =============================== -->
+<!-- THÔNG TIN -->
 
-    <div class="box">
+<div class="box">
 
-        <div id="status">
-            Sẵn sàng 🎹
-        </div>
+<div id="nextNote">
+—
+</div>
 
-        <div id="currentNote">
-            —
-        </div>
+<div id="message">
+Chọn bài rồi bấm "Bắt đầu tập".
+</div>
 
-    </div>
+<div class="info">
+
+<div class="info-card">
+Đúng
+<div class="big" id="correct">0</div>
+</div>
+
+<div class="info-card">
+Sai
+<div class="big" id="wrong">0</div>
+</div>
+
+<div class="info-card">
+Tiến độ
+<div class="big" id="progress">0%</div>
+</div>
+
+<div class="info-card">
+Điểm
+<div class="big" id="score">0</div>
+</div>
+
+</div>
+
+</div>
 
 
-    <!-- ==============================
-         PIANO
-    =============================== -->
+<!-- HƯỚNG DẪN -->
 
-    <div class="box">
+<div class="box">
 
-        <h2>🎹 Piano</h2>
+<h2>📖 Hướng dẫn bài</h2>
 
-        <div id="piano">
+<div id="guide">
+Chọn một bài để xem hướng dẫn.
+</div>
 
-            <div class="key" data-note="C4">C</div>
-            <div class="key" data-note="D4">D</div>
-            <div class="key" data-note="E4">E</div>
-            <div class="key" data-note="F4">F</div>
-            <div class="key" data-note="G4">G</div>
-            <div class="key" data-note="A4">A</div>
-            <div class="key" data-note="B4">B</div>
+<h3>🎼 Chuỗi nốt</h3>
 
-            <div class="key" data-note="C5">C</div>
-            <div class="key" data-note="D5">D</div>
-            <div class="key" data-note="E5">E</div>
+<div class="steps" id="steps"></div>
 
-        </div>
+</div>
 
-    </div>
+
+<!-- PIANO -->
+
+<div class="box">
+
+<h2>🎹 Piano</h2>
+
+<p>
+Bàn phím máy tính:
+<b>Q W E R T Y U I O P [ ] A S D F G H J K L ; '</b>
+</p>
+
+<div class="piano-wrap">
+
+<div class="piano" id="piano"></div>
+
+</div>
+
+</div>
 
 </div>
 
 
 <script>
 
-/* ==============================
-   BIẾN
-============================== */
+/* =====================================================
+   CẤU HÌNH BÀN PHÍM
+===================================================== */
 
-let audioContext = null;
-
-let currentSong = [];
-let currentIndex = 0;
-
-let playing = false;
-let paused = false;
-
-let timer = null;
-
-window.songNotes = null;
+const keyboard = [
+    "q","w","e","r","t","y","u","i","o","p","[","]",
+    "a","s","d","f","g","h","j","k","l",";","'"
+];
 
 
-/* ==============================
+/* =====================================================
+   NỐT TƯƠNG ỨNG
+===================================================== */
+
+const notes = [
+    "C3","D3","E3","F3","G3","A3","B3",
+    "C4","D4","E4","F4","G4",
+    "A4","B4","C5","D5","E5","F5",
+    "G5","A5","B5","C6","D6"
+];
+
+
+const frequencies = {
+
+    C3:130.81,
+    D3:146.83,
+    E3:164.81,
+    F3:174.61,
+    G3:196.00,
+    A3:220.00,
+    B3:246.94,
+
+    C4:261.63,
+    D4:293.66,
+    E4:329.63,
+    F4:349.23,
+    G4:392.00,
+    A4:440.00,
+    B4:493.88,
+
+    C5:523.25,
+    D5:587.33,
+    E5:659.25,
+    F5:698.46,
+    G5:783.99,
+    A5:880.00,
+    B5:987.77,
+
+    C6:1046.50,
+    D6:1174.66
+};
+
+
+/* =====================================================
+   25 BÀI
+   Các bài luyện tập đơn giản/public-domain/truyền thống
+===================================================== */
+
+const songs = [
+
+{
+    name:"🎵 Bài 1 — Luyện 5 nốt",
+    difficulty:"⭐",
+    guide:"Làm quen với C4 đến G4. Bấm chậm và đều.",
+    notes:["C4","D4","E4","F4","G4","F4","E4","D4","C4"]
+},
+
+{
+    name:"🎵 Bài 2 — Lên và xuống",
+    difficulty:"⭐",
+    guide:"Tập di chuyển lên rồi quay xuống.",
+    notes:["C4","D4","E4","F4","G4","A4","B4","A4","G4","F4","E4","D4","C4"]
+},
+
+{
+    name:"🎵 Bài 3 — Ngón cái",
+    difficulty:"⭐",
+    guide:"Tập các bước nhảy nhỏ giữa những nốt liền nhau.",
+    notes:["C4","E4","D4","F4","E4","G4","F4","A4","G4","E4","D4","C4"]
+},
+
+{
+    name:"🎵 Bài 4 — Nhịp đều",
+    difficulty:"⭐",
+    guide:"Mỗi nốt một nhịp. Không cần đánh nhanh.",
+    notes:["C4","C4","D4","D4","E4","E4","F4","F4","G4","G4"]
+},
+
+{
+    name:"🎵 Bài 5 — Đổi quãng",
+    difficulty:"⭐⭐",
+    guide:"Luyện chuyển từ nốt thấp sang nốt cao.",
+    notes:["C4","G4","D4","A4","E4","B4","F4","C5","G4","C4"]
+},
+
+{
+    name:"🎵 Bài 6 — Giai điệu 1",
+    difficulty:"⭐⭐",
+    guide:"Một bài luyện giai điệu ngắn.",
+    notes:["C4","D4","G4","E4","D4","C4","E4","G4","A4","G4","E4","C4"]
+},
+
+{
+    name:"🎵 Bài 7 — Giai điệu 2",
+    difficulty:"⭐⭐",
+    guide:"Tập giữ nhịp ổn định.",
+    notes:["E4","D4","C4","D4","E4","E4","E4","D4","D4","D4","E4","G4","G4"]
+},
+
+{
+    name:"🎵 Bài 8 — Câu hỏi đáp",
+    difficulty:"⭐⭐",
+    guide:"Hai câu nhạc có dạng đối đáp.",
+    notes:["C4","E4","G4","E4","C4","D4","F4","A4","F4","D4"]
+},
+
+{
+    name:"🎵 Bài 9 — Quãng tám",
+    difficulty:"⭐⭐",
+    guide:"Luyện chuyển giữa C4 và C5.",
+    notes:["C4","C5","B4","B3","A4","A3","G4","G3"]
+},
+
+{
+    name:"🎵 Bài 10 — Nốt cao",
+    difficulty:"⭐⭐",
+    guide:"Làm quen vùng C5 đến D6.",
+    notes:["C5","D5","E5","F5","G5","A5","B5","C6","D6","C6","B5","A5"]
+},
+
+{
+    name:"🎵 Bài 11 — Frère Jacques",
+    difficulty:"⭐⭐",
+    guide:"Tập một giai điệu dân gian/truyền thống ngắn.",
+    notes:["C4","D4","E4","C4","C4","D4","E4","C4"]
+},
+
+{
+    name:"🎵 Bài 12 — Ode to Joy",
+    difficulty:"⭐⭐",
+    guide:"Tập đoạn giai điệu ngắn của tác phẩm thuộc public domain.",
+    notes:["E4","E4","F4","G4","G4","F4","E4","D4"]
+},
+
+{
+    name:"🎵 Bài 13 — Twinkle luyện tập",
+    difficulty:"⭐⭐",
+    guide:"Đoạn luyện tập ngắn dựa trên giai điệu truyền thống.",
+    notes:["C4","C4","G4","G4","A4","A4","G4"]
+},
+
+{
+    name:"🎵 Bài 14 — London Bridge",
+    difficulty:"⭐⭐",
+    guide:"Luyện chuyển nốt gần nhau.",
+    notes:["G4","A4","G4","F4","E4","F4","G4","D4","E4","F4","E4","F4","G4"]
+},
+
+{
+    name:"🎵 Bài 15 — Mary Had a Little Lamb",
+    difficulty:"⭐⭐",
+    guide:"Bài luyện nốt đơn giản cho người mới.",
+    notes:["E4","D4","C4","D4","E4","E4","E4"]
+},
+
+{
+    name:"🎵 Bài 16 — Rain Rain",
+    difficulty:"⭐⭐",
+    guide:"Tập các cụm nốt ngắn.",
+    notes:["C4","C4","G4","G4","A4","A4","G4"]
+},
+
+{
+    name:"🎵 Bài 17 — Row Row Row",
+    difficulty:"⭐⭐⭐",
+    guide:"Luyện chuyển giữa các nhóm nốt.",
+    notes:["C4","C4","C4","D4","E4","E4","D4","E4","F4","G4"]
+},
+
+{
+    name:"🎵 Bài 18 — Cầu thang",
+    difficulty:"⭐⭐⭐",
+    guide:"Luyện chạy nốt liên tục.",
+    notes:["C4","D4","E4","F4","G4","A4","B4","C5","B4","A4","G4","F4","E4","D4","C4"]
+},
+
+{
+    name:"🎵 Bài 19 — Nhảy ba nốt",
+    difficulty:"⭐⭐⭐",
+    guide:"Tập các bước nhảy theo nhóm ba.",
+    notes:["C4","E4","G4","D4","F4","A4","E4","G4","B4","F4","A4","C5"]
+},
+
+{
+    name:"🎵 Bài 20 — Vòng hợp âm",
+    difficulty:"⭐⭐⭐",
+    guide:"Luyện các nốt của những nhóm hợp âm cơ bản.",
+    notes:["C4","E4","G4","C5","G4","E4","D4","F4","A4","D5","A4","F4"]
+},
+
+{
+    name:"🎵 Bài 21 — Giai điệu cao",
+    difficulty:"⭐⭐⭐",
+    guide:"Tập vùng C5 đến D6.",
+    notes:["C5","E5","G5","A5","G5","E5","D5","F5","A5","G5","F5","D5"]
+},
+
+{
+    name:"🎵 Bài 22 — Chạy ngón",
+    difficulty:"⭐⭐⭐",
+    guide:"Đánh đều từng nốt, không cần tốc độ cao.",
+    notes:["C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5"]
+},
+
+{
+    name:"🎵 Bài 23 — Đổi quãng nhanh",
+    difficulty:"⭐⭐⭐⭐",
+    guide:"Tập phản xạ khi chuyển từ thấp lên cao.",
+    notes:["C4","G4","C5","G4","D4","A4","D5","A4","E4","B4","E5","B4"]
+},
+
+{
+    name:"🎵 Bài 24 — Luyện tốc độ",
+    difficulty:"⭐⭐⭐⭐",
+    guide:"Chỉ tăng tốc khi đã bấm chính xác.",
+    notes:["C4","D4","E4","F4","G4","F4","E4","D4","E4","F4","G4","A4","G4","F4","E4","D4"]
+},
+
+{
+    name:"🎵 Bài 25 — Final Challenge",
+    difficulty:"⭐⭐⭐⭐⭐",
+    guide:"Bài tổng hợp. Tập chậm trước rồi mới tăng tốc.",
+    notes:[
+        "C4","E4","G4","C5",
+        "B4","G4","E4","C4",
+        "D4","F4","A4","D5",
+        "C5","A4","F4","D4",
+        "E4","G4","B4","E5",
+        "D5","B4","G4","E4"
+    ]
+}
+
+];
+
+
+/* =====================================================
+   TẠO SELECT
+===================================================== */
+
+const songSelect =
+    document.getElementById("songSelect");
+
+songs.forEach((song,index)=>{
+
+    const option =
+        document.createElement("option");
+
+    option.value=index;
+
+    option.textContent =
+        song.name;
+
+    songSelect.appendChild(option);
+
+});
+
+
+/* =====================================================
+   TẠO PIANO
+===================================================== */
+
+const piano =
+    document.getElementById("piano");
+
+
+keyboard.forEach((key,index)=>{
+
+    const div =
+        document.createElement("div");
+
+    div.className="key";
+
+    div.dataset.note=
+        notes[index];
+
+    div.dataset.key=
+        key;
+
+    div.innerHTML=`
+        <span>
+            <div class="note">
+                ${notes[index]}
+            </div>
+            <div class="computer">
+                ${key.toUpperCase()}
+            </div>
+        </span>
+    `;
+
+    div.addEventListener(
+        "click",
+        ()=>{
+            pressNote(notes[index]);
+        }
+    );
+
+    piano.appendChild(div);
+
+});
+
+
+/* =====================================================
    AUDIO
-============================== */
+===================================================== */
 
-function getAudioContext() {
+let audioContext=null;
 
-    if (!audioContext) {
+
+function getAudio(){
+
+    if(!audioContext){
 
         audioContext =
             new (
@@ -302,909 +650,578 @@ function getAudioContext() {
 
     }
 
-    if (audioContext.state === "suspended") {
-
+    if(
+        audioContext.state==="suspended"
+    ){
         audioContext.resume();
-
     }
 
     return audioContext;
 }
 
 
-/* ==============================
-   TẦN SỐ
-============================== */
+function playNote(note,duration=.45){
 
-const frequencies = {
-
-    C4: 261.63,
-    D4: 293.66,
-    E4: 329.63,
-    F4: 349.23,
-    G4: 392.00,
-    A4: 440.00,
-    B4: 493.88,
-
-    C5: 523.25,
-    D5: 587.33,
-    E5: 659.25
-
-};
-
-
-/* ==============================
-   PHÁT NỐT
-============================== */
-
-function playNote(note, duration = 0.5) {
-
-    const frequency =
+    const freq=
         frequencies[note];
 
-    if (!frequency) {
+    if(!freq) return;
 
-        console.warn(
-            "Không có tần số cho:",
-            note
-        );
+    const ctx=getAudio();
 
-        return;
-
-    }
-
-    const ctx =
-        getAudioContext();
-
-
-    const oscillator =
+    const osc=
         ctx.createOscillator();
 
-    const gain =
+    const gain=
         ctx.createGain();
 
+    osc.type="triangle";
 
-    oscillator.type =
-        "triangle";
-
-    oscillator.frequency.value =
-        frequency;
-
+    osc.frequency.value=freq;
 
     gain.gain.setValueAtTime(
-        0.0001,
+        .0001,
         ctx.currentTime
     );
 
+    gain.gain.exponentialRampToValueAtTime(
+        .3,
+        ctx.currentTime+.02
+    );
 
     gain.gain.exponentialRampToValueAtTime(
-        0.35,
-        ctx.currentTime + 0.02
+        .0001,
+        ctx.currentTime+duration
     );
 
+    osc.connect(gain);
 
-    gain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        ctx.currentTime + duration
+    gain.connect(ctx.destination);
+
+    osc.start();
+
+    osc.stop(
+        ctx.currentTime+
+        duration+
+        .05
     );
 
-
-    oscillator.connect(gain);
-
-    gain.connect(
-        ctx.destination
-    );
-
-
-    oscillator.start();
-
-
-    oscillator.stop(
-        ctx.currentTime +
-        duration +
-        0.05
-    );
-
-
-    highlightKey(note);
-
+    flashKey(note);
 }
 
 
-/* ==============================
-   SÁNG PHÍM
-============================== */
+/* =====================================================
+   FLASH PHÍM
+===================================================== */
 
-function highlightKey(note) {
+function flashKey(note){
 
-    const key =
+    const key=
         document.querySelector(
             `.key[data-note="${note}"]`
         );
 
-    if (!key) return;
+    if(!key)return;
+
+    key.classList.add("active");
+
+    setTimeout(()=>{
+        key.classList.remove("active");
+    },160);
+}
 
 
-    key.classList.add(
-        "active"
-    );
+/* =====================================================
+   TRẠNG THÁI
+===================================================== */
+
+let currentSong=null;
+
+let currentIndex=0;
+
+let training=false;
+
+let correct=0;
+
+let wrong=0;
+
+let demoTimer=null;
 
 
-    setTimeout(
-        () => {
+/* =====================================================
+   HIỂN THỊ BÀI
+===================================================== */
 
-            key.classList.remove(
-                "active"
-            );
+function loadSong(){
 
-        },
-        180
+    const index=
+        Number(songSelect.value);
+
+    currentSong=
+        songs[index];
+
+    currentIndex=0;
+
+    correct=0;
+
+    wrong=0;
+
+    updateStats();
+
+    showGuide();
+
+    showTarget();
+
+}
+
+
+function showGuide(){
+
+    if(!currentSong)return;
+
+    document.getElementById(
+        "guide"
+    ).innerHTML=`
+
+        <b>${currentSong.name}</b><br>
+
+        Độ khó:
+        ${currentSong.difficulty}<br>
+
+        ${currentSong.guide}<br><br>
+
+        <b>⌨️ Cách chơi:</b><br>
+
+        Bấm phím trên máy tính tương ứng
+        với nốt đang sáng màu xanh.
+    `;
+
+
+    const steps=
+        document.getElementById("steps");
+
+    steps.innerHTML="";
+
+
+    currentSong.notes.forEach(
+        (note,index)=>{
+
+            const div=
+                document.createElement("div");
+
+            div.className="step";
+
+            div.dataset.index=index;
+
+            div.textContent=
+                note;
+
+            steps.appendChild(div);
+
+        }
     );
 
 }
 
 
-/* ==============================
-   CLICK PIANO
-============================== */
+function showTarget(){
 
-document
-    .querySelectorAll(".key")
-    .forEach(
-        key => {
+    document
+        .querySelectorAll(".key")
+        .forEach(key=>{
+            key.classList.remove("target");
+        });
 
-            key.addEventListener(
-                "click",
-                () => {
 
-                    playNote(
-                        key.dataset.note
-                    );
+    if(
+        !currentSong ||
+        currentIndex>=
+        currentSong.notes.length
+    ){
 
-                }
+        document.getElementById(
+            "nextNote"
+        ).textContent="🎉";
+
+        return;
+
+    }
+
+
+    const note=
+        currentSong.notes[currentIndex];
+
+
+    document.getElementById(
+        "nextNote"
+    ).textContent=
+        `🎯 ${note}`;
+
+
+    const key=
+        document.querySelector(
+            `.key[data-note="${note}"]`
+        );
+
+
+    if(key){
+        key.classList.add("target");
+    }
+
+
+    document
+        .querySelectorAll(".step")
+        .forEach(step=>{
+
+            step.classList.remove(
+                "current"
             );
 
+            step.classList.remove(
+                "done"
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".step")
+        .forEach(step=>{
+
+            const i=
+                Number(step.dataset.index);
+
+            if(i<currentIndex)
+                step.classList.add("done");
+
+            if(i===currentIndex)
+                step.classList.add("current");
+
+        });
+
+}
+
+
+/* =====================================================
+   CHẤM ĐIỂM
+===================================================== */
+
+function pressNote(note){
+
+    playNote(note);
+
+
+    if(!training){
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            `🎹 Bạn vừa bấm ${note}`;
+
+        return;
+
+    }
+
+
+    if(!currentSong)return;
+
+
+    const target=
+        currentSong.notes[currentIndex];
+
+
+    if(note===target){
+
+        correct++;
+
+        currentIndex++;
+
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "✅ Chính xác!";
+
+
+        if(
+            currentIndex>=
+            currentSong.notes.length
+        ){
+
+            training=false;
+
+            document.getElementById(
+                "nextNote"
+            ).textContent=
+                "🏆 Hoàn thành!";
+
+
+            document.getElementById(
+                "message"
+            ).textContent=
+                `🎉 Hoàn thành ${currentSong.name}!`;
+
         }
-    );
+
+        else{
+
+            showTarget();
+
+        }
+
+    }
+    else{
+
+        wrong++;
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            `❌ Sai rồi — cần bấm ${target}`;
+
+    }
 
 
-/* ==============================
-   BÀN PHÍM
-============================== */
+    updateStats();
 
-const keyboard = {
+}
 
-    a: "C4",
-    s: "D4",
-    d: "E4",
-    f: "F4",
-    g: "G4",
-    h: "A4",
-    j: "B4",
-    k: "C5",
-    l: "D5",
-    ";": "E5"
 
-};
+/* =====================================================
+   THỐNG KÊ
+===================================================== */
 
+function updateStats(){
+
+    const total=
+        currentSong
+        ? currentSong.notes.length
+        : 0;
+
+
+    const progress=
+        total
+        ? Math.round(
+            currentIndex/
+            total*
+            100
+        )
+        : 0;
+
+
+    const score=
+        correct*10-
+        wrong*2;
+
+
+    document.getElementById(
+        "correct"
+    ).textContent=
+        correct;
+
+
+    document.getElementById(
+        "wrong"
+    ).textContent=
+        wrong;
+
+
+    document.getElementById(
+        "progress"
+    ).textContent=
+        progress+"%";
+
+
+    document.getElementById(
+        "score"
+    ).textContent=
+        Math.max(0,score);
+
+}
+
+
+/* =====================================================
+   BẮT ĐẦU TẬP
+===================================================== */
+
+document.getElementById(
+    "startBtn"
+).addEventListener(
+    "click",
+    ()=>{
+
+        loadSong();
+
+        training=true;
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "🎯 Bắt đầu! Hãy bấm nốt đang sáng.";
+
+        showTarget();
+
+    }
+);
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+document.getElementById(
+    "resetBtn"
+).addEventListener(
+    "click",
+    ()=>{
+
+        clearTimeout(demoTimer);
+
+        training=false;
+
+        loadSong();
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "🔄 Đã làm lại bài.";
+
+    }
+);
+
+
+/* =====================================================
+   ĐỔI BÀI
+===================================================== */
+
+songSelect.addEventListener(
+    "change",
+    ()=>{
+
+        clearTimeout(demoTimer);
+
+        training=false;
+
+        loadSong();
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "Đã chọn bài. Bấm Bắt đầu tập.";
+
+    }
+);
+
+
+/* =====================================================
+   DEMO
+===================================================== */
+
+document.getElementById(
+    "demoBtn"
+).addEventListener(
+    "click",
+    ()=>{
+
+        clearTimeout(demoTimer);
+
+        loadSong();
+
+        training=false;
+
+        let i=0;
+
+
+        function next(){
+
+            if(
+                i>=
+                currentSong.notes.length
+            ){
+
+                document.getElementById(
+                    "message"
+                ).textContent=
+                    "🤖 Demo hoàn thành.";
+
+                showTarget();
+
+                return;
+
+            }
+
+
+            const note=
+                currentSong.notes[i];
+
+
+            document.getElementById(
+                "nextNote"
+            ).textContent=
+                `🤖 ${note}`;
+
+
+            playNote(
+                note,
+                .42
+            );
+
+
+            i++;
+
+
+            demoTimer=
+                setTimeout(
+                    next,
+                    470
+                );
+
+        }
+
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "🤖 Đang phát demo...";
+
+
+        next();
+
+    }
+);
+
+
+/* =====================================================
+   BÀN PHÍM MÁY TÍNH
+===================================================== */
 
 document.addEventListener(
     "keydown",
-    event => {
+    event=>{
 
-        if (event.repeat)
-            return;
+        if(event.repeat)return;
 
+        const key=
+            event.key.toLowerCase();
 
-        const note =
-            keyboard[
-                event.key.toLowerCase()
-            ];
+        const index=
+            keyboard.indexOf(key);
 
+        if(index===-1)return;
 
-        if (note) {
-
-            playNote(note);
-
-        }
+        pressNote(
+            notes[index]
+        );
 
     }
 );
 
 
-/* ==============================
-   BÀI MẪU
-============================== */
-
-const songs = {
-
-    twinkle: [
-
-        ["C4", 0.5],
-        ["C4", 0.5],
-        ["G4", 0.5],
-        ["G4", 0.5],
-        ["A4", 0.5],
-        ["A4", 0.5],
-        ["G4", 1],
-
-        ["F4", 0.5],
-        ["F4", 0.5],
-        ["E4", 0.5],
-        ["E4", 0.5],
-        ["D4", 0.5],
-        ["D4", 0.5],
-        ["C4", 1]
-
-    ],
-
-
-    ode: [
-
-        ["E4", 0.5],
-        ["E4", 0.5],
-        ["F4", 0.5],
-        ["G4", 0.5],
-
-        ["G4", 0.5],
-        ["F4", 0.5],
-        ["E4", 0.5],
-        ["D4", 0.5],
-
-        ["C4", 0.5],
-        ["C4", 0.5],
-        ["D4", 0.5],
-        ["E4", 0.5],
-
-        ["E4", 0.75],
-        ["D4", 0.25],
-        ["D4", 1]
-
-    ],
-
-
-    happy: [
-
-        ["C4", 0.4],
-        ["C4", 0.4],
-        ["D4", 0.8],
-        ["C4", 0.8],
-        ["F4", 0.8],
-        ["E4", 1],
-
-        ["C4", 0.4],
-        ["C4", 0.4],
-        ["D4", 0.8],
-        ["C4", 0.8],
-        ["G4", 0.8],
-        ["F4", 1]
-
-    ]
-
-};
-
-
-/* ==============================
-   TẢI BÀI MẪU
-============================== */
-
-document
-    .getElementById("loadBtn")
-    .addEventListener(
-        "click",
-        () => {
-
-            const selected =
-                document.getElementById(
-                    "songSelect"
-                ).value;
-
-
-            currentSong =
-                songs[selected] || [];
-
-
-            currentIndex = 0;
-
-            playing = false;
-
-            paused = false;
-
-            clearTimeout(timer);
-
-
-            document.getElementById(
-                "status"
-            ).textContent =
-                "Đã tải bài 🎵";
-
-
-            document.getElementById(
-                "currentNote"
-            ).textContent =
-                "Sẵn sàng";
-
-        }
-    );
-
-
-/* ==============================
-   PLAY
-============================== */
-
-document
-    .getElementById("playBtn")
-    .addEventListener(
-        "click",
-        () => {
-
-            playSong();
-
-        }
-    );
-
-
-/* ==============================
-   PLAY SONG
-============================== */
-
-function playSong() {
-
-    if (
-        !window.songNotes ||
-        !Array.isArray(
-            window.songNotes
-        ) ||
-        window.songNotes.length === 0
-    ) {
-
-        /* Nếu chưa có bài API,
-           dùng bài đang chọn */
-
-        const selected =
-            document.getElementById(
-                "songSelect"
-            ).value;
-
-
-        currentSong =
-            songs[selected] || [];
-
-    }
-
-    else {
-
-        currentSong =
-            window.songNotes.map(
-                item => {
-
-                    if (
-                        Array.isArray(item)
-                    ) {
-
-                        return [
-                            item[0],
-                            Number(
-                                item[1]
-                            ) || 0.5
-                        ];
-
-                    }
-
-
-                    return [
-                        item.note,
-                        Number(
-                            item.duration
-                        ) || 0.5
-                    ];
-
-                }
-            );
-
-    }
-
-
-    if (
-        !currentSong.length
-    ) {
-
-        alert(
-            "Không có dữ liệu bài hát!"
-        );
-
-        return;
-
-    }
-
-
-    const ctx =
-        getAudioContext();
-
-
-    if (
-        ctx.state === "suspended"
-    ) {
-
-        ctx.resume();
-
-    }
-
-
-    clearTimeout(timer);
-
-
-    currentIndex = 0;
-
-    playing = true;
-
-    paused = false;
-
-
-    document.getElementById(
-        "status"
-    ).textContent =
-        "🎹 Đang tự động đánh...";
-
-
-    playNext();
-
-}
-
-
-/* ==============================
-   ĐÁNH NỐT
-============================== */
-
-function playNext() {
-
-    if (
-        !playing ||
-        paused
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        currentIndex >=
-        currentSong.length
-    ) {
-
-        playing = false;
-
-
-        document.getElementById(
-            "status"
-        ).textContent =
-            "✅ Đã đánh xong bài!";
-
-
-        document.getElementById(
-            "currentNote"
-        ).textContent =
-            "🎵";
-
-
-        return;
-
-    }
-
-
-    const item =
-        currentSong[
-            currentIndex
-        ];
-
-
-    const note =
-        item[0];
-
-    const duration =
-        Number(item[1]) || 0.5;
-
-
-    document.getElementById(
-        "currentNote"
-    ).textContent =
-        note;
-
-
-    playNote(
-        note,
-        duration
-    );
-
-
-    currentIndex++;
-
-
-    timer =
-        setTimeout(
-            playNext,
-            duration * 1000
-        );
-
-}
-
-
-/* ==============================
-   NHẬN BÀI TỪ API
-============================== */
-
-document
-    .getElementById("receiveBtn")
-    .addEventListener(
-        "click",
-        receiveSong
-    );
-
-
-async function receiveSong() {
-
-    try {
-
-        const selected =
-            document.getElementById(
-                "songSelect"
-            ).value;
-
-
-        const response =
-            await fetch(
-                "/api/piano",
-                {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        title: selected
-                    })
-
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        console.log(
-            "API:",
-            data
-        );
-
-
-        if (
-            !response.ok ||
-            !data.success
-        ) {
-
-            alert(
-                "❌ API lỗi: " +
-                (
-                    data.error ||
-                    "Không lấy được bài"
-                )
-            );
-
-            return;
-
-        }
-
-
-        window.songNotes =
-            data.notes;
-
-
-        document.getElementById(
-            "status"
-        ).textContent =
-            `Đã nhận ${data.notes.length} nốt 🎹`;
-
-
-    }
-
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            "❌ Không kết nối được Piano API!"
-        );
-
-    }
-
-}
-
-
-/* ==============================
-   PAUSE
-============================== */
-
-document
-    .getElementById("pauseBtn")
-    .addEventListener(
-        "click",
-        () => {
-
-            if (!playing)
-                return;
-
-
-            paused = true;
-
-
-            clearTimeout(
-                timer
-            );
-
-
-            document.getElementById(
-                "status"
-            ).textContent =
-                "⏸️ Đã tạm dừng";
-
-        }
-    );
-
-
-/* ==============================
-   STOP
-============================== */
-
-document
-    .getElementById("stopBtn")
-    .addEventListener(
-        "click",
-        () => {
-
-            playing = false;
-
-            paused = false;
-
-
-            clearTimeout(
-                timer
-            );
-
-
-            currentIndex = 0;
-
-
-            document.getElementById(
-                "status"
-            ).textContent =
-                "⏹️ Đã dừng";
-
-
-            document.getElementById(
-                "currentNote"
-            ).textContent =
-                "—";
-
-        }
-    );
-
-
-/* ==============================
-   YOUTUBE
-============================== */
-
-const youtubeBtn =
-    document.getElementById(
-        "youtubeBtn"
-    );
-
-const youtubeUrl =
-    document.getElementById(
-        "youtubeUrl"
-    );
-
-const youtubeResult =
-    document.getElementById(
-        "youtubeResult"
-    );
-
-
-youtubeBtn.addEventListener(
-    "click",
-    async () => {
-
-        const url =
-            youtubeUrl.value.trim();
-
-
-        if (!url) {
-
-            youtubeResult.textContent =
-                "❌ Hãy dán link YouTube.";
-
-            return;
-
-        }
-
-
-        try {
-
-            /* Lấy thông tin video */
-
-            const api =
-                "https://www.youtube.com/oembed" +
-                "?url=" +
-                encodeURIComponent(
-                    url
-                ) +
-                "&format=json";
-
-
-            const response =
-                await fetch(api);
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Link YouTube không hợp lệ"
-                );
-
-            }
-
-
-            const data =
-                await response.json();
-
-
-            youtubeResult.innerHTML =
-                `
-                ✅ Đã nhận bài!<br><br>
-
-                🎵 <b>
-                ${escapeHTML(
-                    data.title
-                )}
-                </b><br>
-
-                👤 Kênh:
-                ${escapeHTML(
-                    data.author_name
-                )}
-
-                <br><br>
-                ⏳ Đang lấy nốt...
-                `;
-
-
-            /*
-             * Gửi tên video lên API.
-             *
-             * API hiện tại của bạn chỉ có
-             * dữ liệu nốt mẫu.
-             */
-
-            const apiResponse =
-                await fetch(
-                    "/api/piano",
-                    {
-
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-                                title:
-                                    data.title
-                            })
-
-                    }
-                );
-
-
-            const apiData =
-                await apiResponse.json();
-
-
-            if (
-                !apiResponse.ok ||
-                !apiData.success
-            ) {
-
-                throw new Error(
-                    apiData.error ||
-                    "API chưa có nốt cho bài này"
-                );
-
-            }
-
-
-            window.songNotes =
-                apiData.notes;
-
-
-            console.log(
-                "🎹 NOTES:",
-                apiData.notes
-            );
-
-
-            youtubeResult.innerHTML =
-                `
-                ${youtubeResult.innerHTML}
-
-                <br>
-
-                🎹 Đã nhận
-                <b>
-                ${apiData.notes.length}
-                </b>
-                nốt!
-
-                <br>
-
-                ✅ Bấm Play để đánh.
-                `;
-
-
-            document.getElementById(
-                "status"
-            ).textContent =
-                `Đã nhận ${apiData.notes.length} nốt từ API 🎹`;
-
-        }
-
-        catch (error) {
-
-            console.error(
-                error
-            );
-
-
-            youtubeResult.innerHTML =
-                `
-                ❌ ${escapeHTML(
-                    error.message
-                )}
-                `;
-
-        }
-
-    }
-);
-
-
-/* ==============================
-   ESCAPE HTML
-============================== */
-
-function escapeHTML(text) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        text;
-
-
-    return div.innerHTML;
-
-}
+/* =====================================================
+   KHỞI ĐỘNG
+===================================================== */
+
+loadSong();
 
 </script>
 
