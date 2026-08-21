@@ -891,6 +891,23 @@ async function receiveSong() {
         alert("Không kết nối được Piano API!");
     }
 }
+    function playSong() {
+    if (!window.songNotes || !Array.isArray(window.songNotes)) {
+        alert("Hãy bấm 🎵 Nhận bài trước!");
+        return;
+    }
+
+    console.log("Đang phát:", window.songNotes);
+
+    window.songNotes.forEach((note, index) => {
+        setTimeout(() => {
+            console.log("Đánh nốt:", note);
+
+            // B11 hiện tại chỉ kiểm tra dữ liệu.
+            // B12 sẽ nối phần này với phím piano thật.
+        }, index * 300);
+    });
+}
 </script>
 <button onclick="receiveSong()">🎵 Nhận bài</button>
 <button onclick="playSong()">▶️ Play</button>
