@@ -23,24 +23,59 @@ export default async function handler(req, res) {
          * Dùng để kiểm tra hệ thống Auto Piano.
          */
 
-        const demoNotes = [
-            { note: "C4", duration: 0.5 },
-            { note: "C4", duration: 0.5 },
-            { note: "G4", duration: 0.5 },
-            { note: "G4", duration: 0.5 },
-            { note: "A4", duration: 0.5 },
-            { note: "A4", duration: 0.5 },
-            { note: "G4", duration: 1 },
+      const songs = {
 
-            { note: "F4", duration: 0.5 },
-            { note: "F4", duration: 0.5 },
-            { note: "E4", duration: 0.5 },
-            { note: "E4", duration: 0.5 },
-            { note: "D4", duration: 0.5 },
-            { note: "D4", duration: 0.5 },
-            { note: "C4", duration: 1 }
-        ];
+    twinkle: [
+        { note: "C4", duration: 0.5 },
+        { note: "C4", duration: 0.5 },
+        { note: "G4", duration: 0.5 },
+        { note: "G4", duration: 0.5 },
+        { note: "A4", duration: 0.5 },
+        { note: "A4", duration: 0.5 },
+        { note: "G4", duration: 1 },
+        { note: "F4", duration: 0.5 },
+        { note: "F4", duration: 0.5 },
+        { note: "E4", duration: 0.5 },
+        { note: "E4", duration: 0.5 },
+        { note: "D4", duration: 0.5 },
+        { note: "D4", duration: 0.5 },
+        { note: "C4", duration: 1 }
+    ],
 
+    ode: [
+        { note: "E4", duration: 0.5 },
+        { note: "E4", duration: 0.5 },
+        { note: "F4", duration: 0.5 },
+        { note: "G4", duration: 0.5 },
+        { note: "G4", duration: 0.5 },
+        { note: "F4", duration: 0.5 },
+        { note: "E4", duration: 0.5 },
+        { note: "D4", duration: 0.5 },
+        { note: "C4", duration: 0.5 },
+        { note: "C4", duration: 0.5 },
+        { note: "D4", duration: 0.5 },
+        { note: "E4", duration: 0.5 },
+        { note: "E4", duration: 0.75 },
+        { note: "D4", duration: 0.25 },
+        { note: "D4", duration: 1 }
+    ],
+
+    happy: [
+        { note: "C4", duration: 0.4 },
+        { note: "C4", duration: 0.4 },
+        { note: "D4", duration: 0.8 },
+        { note: "C4", duration: 0.8 },
+        { note: "F4", duration: 0.8 },
+        { note: "E4", duration: 1 },
+        { note: "C4", duration: 0.4 },
+        { note: "C4", duration: 0.4 },
+        { note: "D4", duration: 0.8 },
+        { note: "C4", duration: 0.8 },
+        { note: "G4", duration: 0.8 },
+        { note: "F4", duration: 1 }
+    ]
+
+};
         return res.status(200).json({
 
             success: true,
